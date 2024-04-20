@@ -23,6 +23,16 @@ export const styles = StyleSheet.create({
       width:430,
       
   },
+  Signinpagetext:{
+      color: "rgba(255,255,255,1)",
+      fontSize: 40,
+      fontFamily: "AppleSDGothicNeo-Light",
+      fontWeight: "700",
+      textAlign: 'center',
+      marginTop: 100,
+      
+      marginRight:20
+  },
     tagline: {
         color: "rgba(255,255,255,1)",
         fontSize: 24,
@@ -46,28 +56,34 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
         fontWeight:'900',   
     },
+    input:{
+      color:"red",
+    },
+    inputField:{
+      marginBottom: 30,
+    },
     inputContainer: {
-        marginBottom: 20,
-      },
-      label: {
-        fontSize: 20,
-        fontFamily: "AppleSDGothicNeo-Light",
-        marginBottom: 5,
-        color:'#EDEDED',
-        fontWeight:"500",
-      },
-      input: {
-        height: 40,
         borderColor: '#EDEDED',
         borderWidth: 1,
         paddingHorizontal: 10,
         marginBottom:5,
         borderRadius:10,
-        color:"#FFFFFF",
         width:screenWidth-60,
         height:50,
-
-        
+        marginBottom:0
+      },
+      label: {
+        fontSize: 20,
+        fontFamily: "AppleSDGothicNeo-Light",
+        marginBottom: 5,
+        color:'white',
+        fontWeight:"500",
+      },
+      input:{
+       width:"80%",
+       height:"100%",
+       color: "white",
+       right:-40,        
       },
       passwordInputContainer: {
         flexDirection: 'row',
@@ -101,8 +117,32 @@ export const styles = StyleSheet.create({
   focusedInput:{
     borderColor:'#A2ED3A',
     backgroundColor:'#4d4d55'
-
+  },
+  Icon:{
+    position:'absolute',
+    top:13,
+    left:10,
+    zIndex:10,
+  },
+  passIcon:{
+    position:'absolute',
+    top:40,
+    left:10,
+    zIndex:10,
+  },
+  focusedicon:{
+    color:"#A2ED34",
   }
+  ,invalidInput:{
+    borderColor:'red',
+    backgroundColor:'#4d4d55'
+
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
+}
+
     
     
     

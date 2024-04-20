@@ -4,19 +4,15 @@ import { styles } from '../styles/createAccoutstyle.js';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native"; //navigation
 import { Fontisto } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 
-const CreateAccount = () => {
-    const [name, setName] = useState('');
+const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [nameFocused, setNameFocused] = useState(false);
     const [emailFocused, setEmailFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
-    const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
@@ -25,13 +21,6 @@ const CreateAccount = () => {
     };
 
     const navigation = useNavigation(); // Initialize navigation object
-
-    const handleNameFocus = () => {
-        setNameFocused(true);
-        if (nameError) {
-            setNameError('');
-        }
-    };
 
     const handleEmailFocus = () => {
         setEmailFocused(true);
@@ -47,64 +36,40 @@ const CreateAccount = () => {
         }
     };
 
-    const handleSignPress = async () => {
+    const handleSignPress =async () => {
+        // Validate inputs before navigating
+        if (!email.trim()) {
+            setEmailError('Email is required');
+            return;
+        }
+        if (!/\S+@\S+\.\S+/.test(email.trim())) {
+            setEmailError('Email is invalid');
+            return;
+        }
+        if (!password.trim()) {
+            setPasswordError('Password is required');
+            return;
+        }
         try {
-            // Validate inputs before navigating
-            if (!name.trim()) {
-                setNameError('Name is required');
-                return;
-            }
-            if (!email.trim()) {
-                setEmailError('Email is required');
-                return;
-            }
-            if (!/\S+@\S+\.\S+/.test(email.trim())) {
-                setEmailError('Email is invalid');
-                return;
-            }
-            if (!password.trim()) {
-                setPasswordError('Password is required');
-                return;
-            }
-    
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
-                name,
+            const response = await axios.post('http://localhost:5000/Backend/Auth_Controller/login', {
                 email,
                 password
             });
-            
             // Handle success response (e.g., navigate to next screen)
             console.log(response.data);
-            Alert.alert('Registration Successful', 'You have successfully registered.');
-            navigation.navigate('Gender');
+            Alert.alert('Login succesfull', 'You have successfully logged in.');
         } catch (error) {
             // Handle error response (e.g., display error message)
-            console.error('Registration failed:', error);
-            Alert.alert('Registration Failed', 'Failed to register. Please try again later.');
+            console.error('login failed:', error.response.data.message);
+            Alert.alert('Wrong email or password', error.response.data.message);
         }
+        navigation.navigate('');// navigate to mainmenu not yet created
     };
-    
 
     return (
         <View style={styles.container}>
-            <Text style={styles.tagline1}>Create your account</Text>
+            <Text style={styles.Signinpagetext}>Login in to your Account</Text>
             <Text style={styles.tagline}>Enter your details to continue.</Text>
-            <View style={styles.inputField}>
-                <Text style={styles.label}>Name:</Text>
-                <View style={[styles.inputContainer, nameFocused && styles.focusedInput, nameError && styles.invalidInput]}>
-                    <EvilIcons style={[styles.Icon, nameFocused && styles.focusedicon]} name="user" size={28} color="white" />
-                    <TextInput
-                        style={[styles.input,]}
-                        value={name}
-                        onChangeText={text => setName(text)}
-                        placeholder="Enter your name"
-                        placeholderTextColor="#ffffff" // Change placeholder color here
-                        onFocus={handleNameFocus} // Clear error when focused
-                        onBlur={() => setNameFocused(false)}
-                    />
-                </View>
-                {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
-            </View>
             <View style={styles.inputField}>
                 <Text style={styles.label}>Email:</Text>
                 <View style={[styles.inputContainer, emailFocused && styles.focusedInput, emailError && styles.invalidInput]}>
@@ -149,4 +114,4 @@ const CreateAccount = () => {
     )
 }
 
-export default CreateAccount;
+export default Signin;

@@ -13,7 +13,7 @@ const FirstPage = () => {
     };
 
     const handleSignInPress = () => {
-        Alert.alert('Sign In button pressed!');
+        navigation.navigate('Signin');
     };
 
     return (

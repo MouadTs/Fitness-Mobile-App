@@ -35,13 +35,14 @@ export const styles=StyleSheet.create({
         borderRadius: 60,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#A2ED3A", // Change button background color here
+        backgroundColor: "#000000", // Change button background color here
         marginBottom:50
       },
       gendertext:{
         fontWeight:'bold',
         fontFamily: "AppleSDGothicNeo-Light",
-        fontSize:17,
+        fontSize:19,
+        color:"white"
       },
       backbutton:{
         position:'absolute',
@@ -52,5 +53,11 @@ export const styles=StyleSheet.create({
         position:'absolute',
         bottom:80,
         right:10
+      },
+      selected:{
+        backgroundColor:"#A2ED3A",
+      },
+      selectedText:{
+        color:"black"
       }
 })

@@ -3,7 +3,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { styles } from "../styles/Genderstyle";
 import { FontAwesome } from '@expo/vector-icons';
 import BackButton from "../assets/SmallComponent/BackButton";
-import NextButton from "../assets/SmallComponent/NextButton"
+import NextButton from "../assets/SmallComponent/NextButton";
 import { useNavigation } from "@react-navigation/native"; //navigation
 
 const Gender = () => {
@@ -16,6 +16,9 @@ const Gender = () => {
     const handleBackbutton=()=>{
         navigation.navigate('CreateAccount');
     }
+    const handleNextbutton=()=>{
+        navigation.navigate('Age');
+    }
 
 
     return (
@@ -27,20 +30,21 @@ const Gender = () => {
                     style={[styles.genderButton, selectedGender === 'male' && styles.selected]}
                     onPress={() => handleGenderSelect('male')}
                 >
-                    <FontAwesome name="mars" size={62} color="#fff" />
-                    <Text style={styles.gendertext}>Male</Text>
+                    <FontAwesome name="mars" size={62} color={selectedGender === 'male' ? "black" : "white"} />
+
+                    <Text style={[styles.gendertext,selectedGender === 'male' && styles.selectedText]}>Male</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.genderButton, selectedGender === 'female' && styles.selected]}
                     onPress={() => handleGenderSelect('female')}
                 >
-                    <FontAwesome name="venus" size={62} color="#fff" />
-                    <Text style={styles.gendertext}>Female</Text>
+                    <FontAwesome name="venus" size={62}  color={selectedGender === 'female' ? "black" : "white"}/>
+                    <Text style={[styles.gendertext,selectedGender === 'female' && styles.selectedText]}>Female</Text>
                     
                 </TouchableOpacity>
             </View>
             <View style={styles.backbutton}><BackButton onPress={handleBackbutton}></BackButton></View>
-            <View style={styles.nextbutton}><NextButton></NextButton></View>
+            <View style={styles.nextbutton}><NextButton onPress={handleNextbutton}></NextButton></View>
         </View>
     )
 }
