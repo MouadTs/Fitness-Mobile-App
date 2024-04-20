@@ -6,8 +6,10 @@ import Age from "./Pages/Age";
 import Weight from "./Pages/weight";
 import ChooseGoal from "./Pages/ChooseGoal";
 import Signin from "./Pages/Signin";
+
 import { NavigationContainer } from "@react-navigation/native";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import Mainpage from "./Pages/Mainpage";
 
 const Stack= createNativeStackNavigator();
 export default function App() {
@@ -21,6 +23,7 @@ export default function App() {
         <Stack.Screen name="Weight" component={Weight} options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="ChooseGoal" component={ChooseGoal} options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="Signin" component={Signin} options={{headerShown:false}}></Stack.Screen>
+        <Stack.Screen name="Mainpage" component={Mainpage} ></Stack.Screen>
 
       </Stack.Navigator>
     </NavigationContainer>

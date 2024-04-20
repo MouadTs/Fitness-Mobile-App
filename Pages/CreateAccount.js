@@ -67,7 +67,7 @@ const CreateAccount = () => {
                 return;
             }
     
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
+            const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
                 name,
                 email,
                 password
@@ -75,7 +75,6 @@ const CreateAccount = () => {
             
             // Handle success response (e.g., navigate to next screen)
             console.log(response.data);
-            Alert.alert('Registration Successful', 'You have successfully registered.');
             navigation.navigate('Gender');
         } catch (error) {
             // Handle error response (e.g., display error message)
@@ -143,7 +142,7 @@ const CreateAccount = () => {
                 {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
             </View>
             <TouchableOpacity style={[styles.button, styles.signInButton]} onPress={handleSignPress}>
-                <Text style={styles.buttonText1}>Sign In</Text>
+                <Text style={styles.buttonText1}>Sign Up</Text>
             </TouchableOpacity>
         </View>
     )

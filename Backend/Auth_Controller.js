@@ -3,7 +3,7 @@ const User = require('./User');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body; // Change 'username' to 'name'
 
     try {
         // Check if user with the same email already exists
@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
 
         // Create a new user instance
         const newUser = new User({
-            username,
+            username: name, // Save 'name' as 'username'
             email,
             password: hashedPassword, // Save the hashed password
         });
@@ -32,6 +32,7 @@ exports.register = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 exports.login = async (req, res) => {
@@ -58,6 +59,7 @@ exports.login = async (req, res) => {
         return res.status(200).json({ token,message:"connected succesfully" });
     } catch (error) {
         console.error('Error logging in:', error);
+        window.alert('Login Failed: idk ' + error.message);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };

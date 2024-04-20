@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Alert } from "react-native"; // Import Alert
 import { styles } from '../styles/createAccoutstyle.js';
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native"; //navigation
@@ -36,7 +36,7 @@ const Signin = () => {
         }
     };
 
-    const handleSignPress =async () => {
+    const handleSignPress = async () => {
         // Validate inputs before navigating
         if (!email.trim()) {
             setEmailError('Email is required');
@@ -51,19 +51,19 @@ const Signin = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5000/Backend/Auth_Controller/login', {
+            const response = await axios.post('http://192.168.1.107:5000/api/auth/login', { // Corrected URL
                 email,
                 password
             });
             // Handle success response (e.g., navigate to next screen)
             console.log(response.data);
-            Alert.alert('Login succesfull', 'You have successfully logged in.');
+            Alert.alert('Login successful', 'You have successfully logged in.'); // Changed typo in alert message
+            navigation.navigate('Mainpage'); // Navigate to main menu (change to correct screen name)
         } catch (error) {
             // Handle error response (e.g., display error message)
-            console.error('login failed:', error.response.data.message);
-            Alert.alert('Wrong email or password', error.response.data.message);
+            console.error('Login failed:', error.response.data.message);
+            Alert.alert('Login Failed', error.response.data.message); // Changed alert message
         }
-        navigation.navigate('');// navigate to mainmenu not yet created
     };
 
     return (

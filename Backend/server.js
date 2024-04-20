@@ -6,11 +6,12 @@ const cors = require('cors');
 
 const app = express();
 
+// Apply CORS middleware before defining routes
+app.use(cors());
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect( 'mongodb+srv://mouadisma655:5wooRTFvGCqMztrM@cluster0.6qimisa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
