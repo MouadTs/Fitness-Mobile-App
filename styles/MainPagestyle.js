@@ -37,7 +37,7 @@ export const styles=StyleSheet.create({
         borderRadius: 12,
       },
       buttonText: {
-        fontSize: 16,
+        fontSize: 17,
       },
       selectedButton: {
         backgroundColor: "#A2ED3A",
