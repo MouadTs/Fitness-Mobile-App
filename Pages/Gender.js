@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native"; //navigation
 
 const Gender = () => {
     const [selectedGender, setSelectedGender] = useState(null);
-
+    
     const handleGenderSelect = (gender) => {
         setSelectedGender(gender);
     };

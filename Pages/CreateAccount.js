@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { styles } from '../styles/createAccoutstyle.js';
 import { MaterialIcons } from "@expo/vector-icons";
@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native"; //navigation
 import { Fontisto } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { UsernameContext } from "./Context/UsernameContext.js";
 import axios from 'axios';
 
 const CreateAccount = () => {
@@ -19,6 +20,7 @@ const CreateAccount = () => {
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const { setUsername } = useContext(UsernameContext); // handle the name to be shared with other screens
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -48,40 +50,45 @@ const CreateAccount = () => {
     };
 
     const handleSignPress = async () => {
-        try {
-            // Validate inputs before navigating
-            if (!name.trim()) {
-                setNameError('Name is required');
-                return;
-            }
-            if (!email.trim()) {
-                setEmailError('Email is required');
-                return;
-            }
-            if (!/\S+@\S+\.\S+/.test(email.trim())) {
-                setEmailError('Email is invalid');
-                return;
-            }
-            if (!password.trim()) {
-                setPasswordError('Password is required');
-                return;
-            }
-    
-            const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
-                name,
-                email,
-                password
-            });
-            
-            // Handle success response (e.g., navigate to next screen)
-            console.log(response.data);
-            navigation.navigate('Gender');
-        } catch (error) {
-            // Handle error response (e.g., display error message)
-            console.error('Registration failed:', error);
-            Alert.alert('Registration Failed', 'Failed to register. Please try again later.');
+    try {
+        // Validate inputs before navigating
+        if (!name.trim()) {
+            setNameError('Name is required');
+            return;
         }
-    };
+        if (!email.trim()) {
+            setEmailError('Email is required');
+            return;
+        }
+        if (!/\S+@\S+\.\S+/.test(email.trim())) {
+            setEmailError('Email is invalid');
+            return;
+        }
+        if (!password.trim()) {
+            setPasswordError('Password is required');
+            return;
+        }
+
+        const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
+            name,
+            email,
+            password
+        });
+
+        // Handle success response (e.g., navigate to next screen)
+        console.log(response.data);
+        const { token, message } = response.data;
+        const userName = name; // Assuming the name sent in the request is the user's name
+        // Set username in context
+        setUsername(userName);
+        navigation.navigate('Gender', { token, message, userName });
+    } catch (error) {
+        // Handle error response (e.g., display error message)
+        console.error('Registration failed:', error);
+        Alert.alert('Registration Failed', 'Failed to register. Please try again later.');
+    }
+};
+
     
 
     return (

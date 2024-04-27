@@ -3,8 +3,7 @@ const User = require('./User');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-    const { name, email, password } = req.body; // Change 'username' to 'name'
-
+    const { name, email, password } = req.body;
     try {
         // Check if user with the same email already exists
         const existingUser = await User.findOne({ email });
@@ -17,23 +16,24 @@ exports.register = async (req, res) => {
 
         // Create a new user instance
         const newUser = new User({
-            username: name, // Save 'name' as 'username'
+            username: name,
             email,
-            password: hashedPassword, // Save the hashed password
+            password: hashedPassword,
         });
 
         // Save the new user to the database
         await newUser.save();
 
-        // Return success response
-        return res.status(201).json({ message: 'User registered successfully' });
+        // Create JWT with user ID and name
+        const token = jwt.sign({ userId: newUser._id, name: newUser.username }, 'your_secret_key', { expiresIn: '1h' });
+
+        // Return token in response
+        return res.status(201).json({ token, message: 'User registered successfully'+' '+newUser.username });
     } catch (error) {
         console.error('Error registering user:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
         // Find user by email
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'Authentication failed , email not found' });
+            return res.status(401).json({ message: 'Authentication failed, email not found' });
         }
 
         // Check password using bcrypt.compare
@@ -51,15 +51,13 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Authentication failed, incorrect password' });
         }
 
-        // Create JWT
-        const token = jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1h' });
+        // Create JWT with user ID and name
+        const token = jwt.sign({ userId: user._id, name: user.username }, 'your_secret_key', { expiresIn: '1h' });
 
         // Return token in response
-        
-        return res.status(200).json({ token,message:"connected succesfully" });
+        return res.status(200).json({ token, message: 'Connected successfully', name: user.username });
     } catch (error) {
         console.error('Error logging in:', error);
-        window.alert('Login Failed: idk ' + error.message);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
