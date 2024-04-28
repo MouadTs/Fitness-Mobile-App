@@ -10,12 +10,11 @@ import Signin from "./Pages/Signin";
 import { NavigationContainer } from "@react-navigation/native";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Mainpage from "./Pages/Mainpage";
-import { UsernameProvider } from "./Pages/Context/UsernameContext";
-
+import { UserProvider } from "./Pages/Context/UsernameContext";
 const Stack= createNativeStackNavigator();
 export default function App() {
   return (
-    <UsernameProvider>
+    <UserProvider>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Homepage" component={FirstPage} options={{headerShown:false}}/>
@@ -29,7 +28,7 @@ export default function App() {
 
       </Stack.Navigator>
     </NavigationContainer>
-    </UsernameProvider>
+    </UserProvider>
    
   );
 }

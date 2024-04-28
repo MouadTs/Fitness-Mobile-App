@@ -3,12 +3,13 @@ import { Text, View,TextInput,TouchableOpacity} from "react-native";
 import {Ionicons } from "@expo/vector-icons"; // Import appropriate icons
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MainPageHeader from "./MainPageHeader ";
-import { UsernameContext } from "./Context/UsernameContext";
+import { UserContext } from "./Context/UsernameContext";
 import {styles} from "../styles/MainPagestyle";
 
 const Mainpage = () => {
-  const { username } = useContext(UsernameContext);
+  const { username, difficulty } = useContext(UserContext);
   const [selectedButton, setSelectedButton] = useState("beginner");
+  console.log("so3oba",difficulty);
 
   const handleButtonPress = (buttonType) => {
     setSelectedButton(buttonType);
@@ -31,14 +32,14 @@ const Mainpage = () => {
         <TouchableOpacity
           style={[
             styles.button,
-            selectedButton === "beginner" ? styles.selectedButton : styles.unselectedButton,
+            difficulty === "Beginner" ? styles.selectedButton : styles.unselectedButton,
           ]}
           onPress={() => handleButtonPress("beginner")}
         >
           <Text
             style={[
               styles.buttonText,
-              selectedButton === "beginner" ? styles.buttonTextSelected : styles.buttonTextUnselected,
+              difficulty === "Beginner" ? styles.buttonTextSelected : styles.buttonTextUnselected,
             ]}
           >
             Beginner
@@ -47,14 +48,14 @@ const Mainpage = () => {
         <TouchableOpacity
           style={[
             styles.button,
-            selectedButton === "intermediate" ? styles.selectedButton : styles.unselectedButton,
+            difficulty === "Intermediate" ? styles.selectedButton : styles.unselectedButton,
           ]}
           onPress={() => handleButtonPress("intermediate")}
         >
           <Text
             style={[
               styles.buttonText,
-              selectedButton === "intermediate" ? styles.buttonTextSelected : styles.buttonTextUnselected,
+              difficulty === "Intermediate" ? styles.buttonTextSelected : styles.buttonTextUnselected,
             ]}
           >
             Intermediate
@@ -63,14 +64,14 @@ const Mainpage = () => {
         <TouchableOpacity
           style={[
             styles.button,
-            selectedButton === "expert" ? styles.selectedButton : styles.unselectedButton,
+            difficulty === "Expert" ? styles.selectedButton : styles.unselectedButton,
           ]}
           onPress={() => handleButtonPress("expert")}
         >
           <Text
             style={[
               styles.buttonText,
-              selectedButton === "expert" ? styles.buttonTextSelected : styles.buttonTextUnselected,
+              difficulty === "Expert" ? styles.buttonTextSelected : styles.buttonTextUnselected,
             ]}
           >
             Expert

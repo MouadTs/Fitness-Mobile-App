@@ -6,8 +6,9 @@ import { useNavigation } from "@react-navigation/native"; //navigation
 import { Fontisto } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { UsernameContext } from "./Context/UsernameContext.js";
+import { UserContext } from "./Context/UsernameContext.js";
 import axios from 'axios';
+import CustomKeyboardView from "../components/CustomKeyboardView.js";
 
 const CreateAccount = () => {
     const [name, setName] = useState('');
@@ -20,7 +21,7 @@ const CreateAccount = () => {
     const [nameError, setNameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { setUsername } = useContext(UsernameContext); // handle the name to be shared with other screens
+    const { setUsername, setUserId } = useContext(UserContext);
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -69,19 +70,20 @@ const CreateAccount = () => {
             return;
         }
 
-        const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
+        const response = await axios.post('http://192.168.0.118:5000/api/auth/register', {
             name,
             email,
             password
         });
 
         // Handle success response (e.g., navigate to next screen)
-        console.log(response.data);
-        const { token, message } = response.data;
-        const userName = name; // Assuming the name sent in the request is the user's name
+        
         // Set username in context
-        setUsername(userName);
-        navigation.navigate('Gender', { token, message, userName });
+        const { token, message, userId } = response.data;
+            setUsername(name);
+            setUserId(userId); // Store user ID in context
+            console.log("User ID:", userId);
+        navigation.navigate('Gender');
     } catch (error) {
         // Handle error response (e.g., display error message)
         console.error('Registration failed:', error);
@@ -93,6 +95,7 @@ const CreateAccount = () => {
 
     return (
         <View style={styles.container}>
+            <CustomKeyboardView>
             <Text style={styles.tagline1}>Create your account</Text>
             <Text style={styles.tagline}>Enter your details to continue.</Text>
             <View style={styles.inputField}>
@@ -151,6 +154,7 @@ const CreateAccount = () => {
             <TouchableOpacity style={[styles.button, styles.signInButton]} onPress={handleSignPress}>
                 <Text style={styles.buttonText1}>Sign Up</Text>
             </TouchableOpacity>
+            </CustomKeyboardView>
         </View>
     )
 }

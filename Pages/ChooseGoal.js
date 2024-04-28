@@ -1,30 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Text, View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import BackButton from "../assets/SmallComponent/BackButton";
 import NextButton from "../assets/SmallComponent/NextButton";
 import { useNavigation } from "@react-navigation/native";
+import axios from 'axios';
+import { UserContext } from "./Context/UsernameContext"; // Import UserContext
 
 const ChooseGoal = () => {
     const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
+    const { userId, setDifficulty } = useContext(UserContext); // Access userId from context
 
-    const handleNextbutton = () => {
-        navigation.navigate('Mainpage');
+    const handleNextbutton = async () => {
+        // Ensure a plan is selected
+        if (selectedItems.length === 0) {
+            Alert.alert('Please select a plan');
+            return; // Do nothing if no plan is selected
+        }
+        console.log("ID: ", userId);
+
+        try {
+            // Extract difficulty from the selected plan
+            const difficulty = selectedItems[0].name.trim();
+            setDifficulty(difficulty);
+            // Send request to update difficulty
+            const response = await axios.post('http://192.168.0.118:5000/api/auth/difficulty',
+             { userId, difficulty });
+            console.log(response.data);
+            navigation.navigate('Mainpage');
+        } catch (error) {
+            console.error('Error updating difficulty:', error);
+            // Handle error as needed
+        }
     }
 
     // Define your list of plans
     const plans = [
-        { id: 1, name: 'Beginner ' },
-        { id: 2, name: 'Intermediate ' },
+        { id: 1, name: 'Beginner' },
+        { id: 2, name: 'Intermediate' },
         { id: 3, name: 'Expert' },
-        
     ];
 
     // Function to handle when a plan is selected
     const handlePlanSelection = (plan) => {
         setSelectedItems([plan]); // Set the selected plan as an array with only the current plan
     }
-    
 
     // Render item for the FlatList
     const renderPlanItem = ({ item }) => (
@@ -52,7 +72,7 @@ const ChooseGoal = () => {
                 style={styles.planList}
             />
 
-            <View style={styles.backbutton}><BackButton  /></View>
+            <View style={styles.backbutton}><BackButton /></View>
             <View style={styles.nextbutton}><NextButton onPress={handleNextbutton} /></View>
         </View>
     )
@@ -119,5 +139,4 @@ const styles = StyleSheet.create({
         right: 10,
     },
 });
-
 export default ChooseGoal;

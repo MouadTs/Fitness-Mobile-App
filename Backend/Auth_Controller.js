@@ -23,20 +23,21 @@ exports.register = async (req, res) => {
 
         // Save the new user to the database
         await newUser.save();
-
+        console.log("bb. ", newUser._id.toString(), typeof newUser._id.toString());
         // Create JWT with user ID and name
-        const token = jwt.sign({ userId: newUser._id, name: newUser.username }, 'your_secret_key', { expiresIn: '1h' });
-
+        const token = jwt.sign({ userId: newUser._id.toString(), name: newUser.username }, 'your_secret_key', { expiresIn: '4h' });
+        const userid = newUser._id.toString();
         // Return token in response
-        return res.status(201).json({ token, message: 'User registered successfully'+' '+newUser.username });
+        return res.status(201).json({ token, message: 'User registered successfully'+' '+newUser._id, userId: userid });
+        
     } catch (error) {
         console.error('Error registering user:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
-
+// to complete tomorrow use context api and find user by id wla by name li deja endi 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password,difficulty } = req.body;
 
     try {
         // Find user by email
@@ -52,12 +53,33 @@ exports.login = async (req, res) => {
         }
 
         // Create JWT with user ID and name
-        const token = jwt.sign({ userId: user._id, name: user.username }, 'your_secret_key', { expiresIn: '1h' });
-
+        const token = jwt.sign({ userId: user._id.toString(), name: user.username }, 'your_secret_key', { expiresIn: '4h' });
         // Return token in response
-        return res.status(200).json({ token, message: 'Connected successfully', name: user.username });
+        return res.status(200).json({ token, message: 'Connected successfully :', name: user.username,difficulty:user.difficulty });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+// controllers/userController.js
+exports.updateDifficulty = async (req, res) => {
+    const { userId, difficulty } = req.body;
+
+    try {
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Update the difficulty field
+        user.difficulty = difficulty;
+        await user.save();
+
+        return res.status(200).json({ message: 'Difficulty updated successfully', difficulty: user.difficulty });
+    } catch (error) {
+        console.error('Error updating difficulty backend :', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+

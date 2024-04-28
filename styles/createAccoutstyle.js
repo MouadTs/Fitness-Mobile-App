@@ -21,6 +21,7 @@ export const styles = StyleSheet.create({
       textAlign: 'center',
       marginTop: 100,
       width:430,
+      alignSelf: 'center',
       
   },
   Signinpagetext:{

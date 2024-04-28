@@ -1,14 +1,15 @@
-// UsernameContext.js
 import React, { createContext, useState } from 'react';
 
-export const UsernameContext = createContext();
+export const UserContext = createContext();
 
-export const UsernameProvider = ({ children }) => {
+export const UserProvider = ({ children }) => {
     const [username, setUsername] = useState('');
+    const [userId, setUserId] = useState(null); // Add userId state
+    const [difficulty, setDifficulty] = useState(null);
 
     return (
-        <UsernameContext.Provider value={{ username, setUsername }}>
+        <UserContext.Provider value={{ username, setUsername, userId, setUserId, difficulty, setDifficulty }}>
             {children}
-        </UsernameContext.Provider>
+        </UserContext.Provider>
     );
 };
