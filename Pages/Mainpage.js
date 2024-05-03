@@ -5,7 +5,7 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-na
 import MainPageHeader from "./MainPageHeader ";
 import { UserContext } from "./Context/UsernameContext";
 import {styles} from "../styles/MainPagestyle";
-
+import ExerciseSets from "./ExerciceSets";
 const Mainpage = () => {
   const { username, difficulty } = useContext(UserContext);
   const [selectedButton, setSelectedButton] = useState("beginner");
@@ -78,6 +78,8 @@ const Mainpage = () => {
           </Text>
         </TouchableOpacity>
       </View>
+      <Text style={styles.suggesttext}>Suggested Workouts:</Text>
+      <ExerciseSets></ExerciseSets>
     </View>
   );
 };

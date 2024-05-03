@@ -70,7 +70,7 @@ const CreateAccount = () => {
             return;
         }
 
-        const response = await axios.post('http://192.168.0.118:5000/api/auth/register', {
+        const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
             name,
             email,
             password

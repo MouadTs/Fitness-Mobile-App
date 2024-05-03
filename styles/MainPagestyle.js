@@ -1,4 +1,5 @@
 import {  StyleSheet } from "react-native";
+import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export const styles=StyleSheet.create({
     container: {
@@ -16,7 +17,6 @@ export const styles=StyleSheet.create({
         marginLeft:10,
         marginRight:10,
         marginTop:10,
-        marginBottom:10,
     },
     searchInput: {
         flex: 1,
@@ -28,7 +28,7 @@ export const styles=StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        width: "80%",
+        width: "90%",
         marginTop: 16,
       },
       button: {
@@ -51,4 +51,14 @@ export const styles=StyleSheet.create({
       buttonTextUnselected: {
         color: "#000",
       },
+      suggesttext:{
+        color:"white",
+        fontSize:20,
+        fontFamily:"AppleSDGothicNeo-Light",
+        fontWeight:"700",
+        marginTop:10,
+        marginLeft:15,
+        alignSelf:"flex-start"
+       
+      }
 })
