@@ -7,7 +7,6 @@ import Weight from "./Pages/weight";
 import ChooseGoal from "./Pages/ChooseGoal";
 import Signin from "./Pages/Signin";
 // testing 
-import ExerciceSets from "./Pages/ExerciceSets";
 import ExerciseList from "./Pages/ExerciceList";
 
 //

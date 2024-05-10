@@ -1,85 +1,125 @@
-import React, { useState, useEffect,useContext } from "react";
-import { Text, View,TextInput,TouchableOpacity} from "react-native";
-import {Ionicons } from "@expo/vector-icons"; // Import appropriate icons
-import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-native-responsive-screen";
+import React, { useState, useEffect, useContext } from "react";
+import { Text, View, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import MainPageHeader from "./MainPageHeader ";
 import { UserContext } from "./Context/UsernameContext";
-import {styles} from "../styles/MainPagestyle";
+import { styles } from "../styles/MainPagestyle";
 import ExerciseSets from "./ExerciceSets";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { BlurView } from "expo-blur";
+
 const Mainpage = () => {
   const { username, difficulty } = useContext(UserContext);
-  const [selectedButton, setSelectedButton] = useState("beginner");
-  console.log("so3oba",difficulty);
+  const [selectedType, setSelectedType] = useState("All"); // Define selectedType state
 
-  const handleButtonPress = (buttonType) => {
-    setSelectedButton(buttonType);
+  const handleTypePress = (type) => {
+    setSelectedType(type);
   };
 
   return (
     <View style={styles.container}>
       <MainPageHeader userName={username} />
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search exercises..."
-          placeholderTextColor="#ccc"
-        />
-        <TouchableOpacity>
-          <Ionicons name="search" size={wp(8)} color="#16161b" />
+
+      <ScrollView >
+        <View style={styles.Textcontainer}>
+          <Text style={styles.suggesttext}>Suggested Workouts</Text>
+          <Text style={styles.seeAll}>See all</Text>
+        </View>
+        <ScrollView horizontal>
+        <ExerciseSets selectedType={"Biceps"}></ExerciseSets>
+        <ExerciseSets selectedType={"Triceps"}></ExerciseSets>
+        <ExerciseSets selectedType={"Legs"}></ExerciseSets>
+        <ExerciseSets selectedType={"Biceps"}></ExerciseSets>
+</ScrollView>
+        <View style={styles.Textcontainer}>
+          <Text style={styles.WorkoutPrograms}>Workouts Programs</Text>
+          <Text style={styles.seeAll}>See all</Text>
+        </View>
+        <ScrollView horizontal style={styles.typeContainer}>
+          <TouchableOpacity
+            style={[
+              styles.typeButton,
+              selectedType === "All" && styles.selectedTypeButton
+            ]}
+            onPress={() => handleTypePress("All")}
+          >
+            <Text style={styles.typeButtonText}>All type</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.typeButton,
+              selectedType === "Upper Body" && styles.selectedTypeButton
+            ]}
+            onPress={() => handleTypePress("Upper Body")}
+          >
+            <Text style={styles.typeButtonText}>Upper body</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.typeButton,
+              selectedType === "Lower Body" && styles.selectedTypeButton
+            ]}
+            onPress={() => handleTypePress("Lower Body")}
+          >
+            <Text style={styles.typeButtonText}>Lower Body</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.typeButton,
+              selectedType === "Chest" && styles.selectedTypeButton
+            ]}
+            onPress={() => handleTypePress("Chest")}
+          >
+            <Text style={styles.typeButtonText}>Chest</Text>
+          </TouchableOpacity>
+        </ScrollView>
+        {selectedType === "All" && (
+          <ScrollView contentContainerStyle={styles.scrolledPrograms} >
+            <ExerciseSets selectedType={"Biceps"} />
+            <ExerciseSets selectedType={"Triceps"} />
+            <ExerciseSets selectedType={"Legs"} />   
+             <ExerciseSets selectedType={"Biceps"} />
+
+          </ScrollView>
+        )}
+        {selectedType === "Upper Body" && (
+          <ScrollView  contentContainerStyle={styles.scrolledPrograms}>
+            <ExerciseSets selectedType={"Biceps"} />
+            <ExerciseSets selectedType={"Triceps"} />
+          </ScrollView>
+        )}
+        {selectedType === "Lower Body" && (
+          <ScrollView  contentContainerStyle={styles.scrolledPrograms}l>
+            
+            <ExerciseSets selectedType={"Legs"} />   
+
+          </ScrollView>
+        )}
+        {/* Add similar conditional rendering for other types */}
+      </ScrollView>
+      <View style={styles.footerContainer}>
+        <BlurView intensity={40} style={styles.blurContainer} />
+        <TouchableOpacity style={styles.footerButton}>
+          <AntDesign name="home" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <SimpleLineIcons name="energy" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Programs</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <Ionicons name="stats-chart" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Stats</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.footerButton}>
+          <MaterialCommunityIcons name="face-man-profile" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Profile</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            difficulty === "Beginner" ? styles.selectedButton : styles.unselectedButton,
-          ]}
-          onPress={() => handleButtonPress("beginner")}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              difficulty === "Beginner" ? styles.buttonTextSelected : styles.buttonTextUnselected,
-            ]}
-          >
-            Beginner
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            difficulty === "Intermediate" ? styles.selectedButton : styles.unselectedButton,
-          ]}
-          onPress={() => handleButtonPress("intermediate")}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              difficulty === "Intermediate" ? styles.buttonTextSelected : styles.buttonTextUnselected,
-            ]}
-          >
-            Intermediate
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            difficulty === "Expert" ? styles.selectedButton : styles.unselectedButton,
-          ]}
-          onPress={() => handleButtonPress("expert")}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              difficulty === "Expert" ? styles.buttonTextSelected : styles.buttonTextUnselected,
-            ]}
-          >
-            Expert
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.suggesttext}>Suggested Workouts:</Text>
-      <ExerciseSets></ExerciseSets>
+
     </View>
   );
 };

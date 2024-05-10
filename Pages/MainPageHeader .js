@@ -13,7 +13,7 @@ const MainPageHeader = ({ userName }) => {
             </View>
             <View style={styles.iconsContainer}>
                 <TouchableOpacity>
-                    <Ionicons name="notifications" size={wp(10)} color="#A2ED3A" />
+                    <Ionicons name="notifications" size={wp(10)} color="#63c138" />
                 </TouchableOpacity>
                 <TouchableOpacity >
                     <MaterialIcons name="account-circle" size={wp(10)} color="white" />
@@ -33,12 +33,11 @@ const styles = {
         paddingVertical: 8,
         borderBottomWidth: 1,
         borderBottomColor: "#ccc",
-        backgroundColor:'#A2ED3A',
         height:hp(14),
         width:wp(100),
         borderRadius:10,
         paddingTop:40,
-        backgroundColor: '#16161b', // Change the background color here
+        backgroundColor: '#1f1f1f', // Change the background color here
     },
     iconsContainer: {
         flexDirection: "row",

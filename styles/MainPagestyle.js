@@ -3,62 +3,92 @@ import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-na
 
 export const styles=StyleSheet.create({
     container: {
-        flex: 1,
         alignItems: 'center',
-        backgroundColor: '#16161b', // Change the background color here
+        backgroundColor: '#1f1f1f', // Change the background color here
+        height: '100%',
+
     },
-    searchBarContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: "white",
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        height:60,
-        marginLeft:10,
-        marginRight:10,
-        marginTop:10,
-    },
-    searchInput: {
-        flex: 1,
-        color: "white",
-        marginLeft: 8,
-        color:"black"
-    },
-    buttonContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "90%",
-        marginTop: 16,
-      },
-      button: {
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 12,
-      },
-      buttonText: {
-        fontSize: 17,
-      },
-      selectedButton: {
-        backgroundColor: "#A2ED3A",
-      },
-      unselectedButton: {
-        backgroundColor: "#ccc",
-      },
-      buttonTextSelected: {
-        color: "#fff",
-      },
-      buttonTextUnselected: {
-        color: "#000",
-      },
       suggesttext:{
         color:"white",
-        fontSize:20,
+        fontSize:24,
         fontFamily:"AppleSDGothicNeo-Light",
         fontWeight:"700",
         marginTop:10,
         marginLeft:15,
         alignSelf:"flex-start"
-       
+      },
+      WorkoutPrograms:{
+        color:"white",
+        fontSize:24,
+        fontFamily:"AppleSDGothicNeo-Light",
+        fontWeight:"700",
+        marginLeft:15,
+        alignSelf:"flex-start",
+        marginTop:10,
+        marginBottom:10,
+      },
+      footerContainer: {
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        backgroundColor: "rgba(30, 30, 34,0)", // Adjust opacity to control the level of blur
+        paddingBottom: 20,
+        paddingTop: 10,
+        height:130
+      },
+      footerButton: {
+        alignItems: "center",
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 12,
+      },
+      footerButtonText: {
+        fontSize: 14,
+        color: "white",
+      },
+      blurContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
+      Textcontainer:{
+        flexDirection: "row",
+        justifyContent:"space-between",
+        alignItems:"center"
+      },
+      seeAll:{
+        color:"#63c138",
+        fontSize:17,
+        fontWeight:"bold",
+        marginRight:10,
+      },
+        typeContainer: {
+        marginTop: 15,
+        paddingHorizontal: 10,
+        marginBottom: 15,
+      },
+      typeButton: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginHorizontal: 5,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: "gray",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+      typeButtonText: {
+        color: "gray",
+      },
+      selectedTypeButton: {
+        backgroundColor: "#63c138",
+        borderColor: "green",
+      },
+      scrolledPrograms:{
+        alignItems:"center",
       }
 })
