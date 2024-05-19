@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, ImageBackground, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ImageBackground, Alert,Image } from "react-native";
 import { styles } from '../styles/Page1style.js';
 import backgroundImage from '../assets/girl.jpeg'; // Import the image
 import { useNavigation } from "@react-navigation/native"; //navigation
@@ -26,7 +26,7 @@ const FirstPage = () => {
                         </Text>
                     </View>
                     <Text style={styles.tagline}>live healthy, stay strong</Text>
-
+                    
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity style={[styles.button, styles.createAccountButton]} onPress={handleCreateAccountPress}>
                             <Text style={styles.buttonText}>Create account</Text>

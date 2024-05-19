@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, ImageBackground, TouchableOpacity, Modal, Pressable, Platform, ProgressViewIOS, ProgressBarAndroid } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { View, Text, ScrollView, StyleSheet, ImageBackground, TouchableOpacity, Modal, Platform} from "react-native";
 import { Fontisto } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import CustomProgressBar from "./CustomProgressBar";
+
+
 
 // SetDescriptionCard component
 const SetDescriptionCard = ({ exerciseSet }) => {
@@ -27,6 +29,9 @@ const ExerciseList = ({ route }) => {
   const [timer, setTimer] = useState(120); // 2 minutes in seconds
   const [progress, setProgress] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+
+ 
 
   useEffect(() => {
     const fetchExerciseData = async () => {
@@ -50,7 +55,6 @@ const ExerciseList = ({ route }) => {
 
     fetchExerciseData();
   }, [exerciseSet]);
-
   useEffect(() => {
     if (timerActive) {
       const timerId = setInterval(() => {
@@ -66,13 +70,12 @@ const ExerciseList = ({ route }) => {
       return () => clearInterval(timerId);
     }
   }, [timerActive, timer]);
-
   const startTimer = () => {
     setTimerActive(true);
   };
 
   const pauseTimer = () => {
-    setTimerActive(false);
+    setTimerActive(!timerActive);
   };
 
   const resetTimer = () => {
@@ -82,11 +85,11 @@ const ExerciseList = ({ route }) => {
   };
 
   const startSet = () => {
-    resetTimer(); // Reset timer before starting the set
+    resetTimer();
     setModalVisible(true);
-    startTimer(); // Start the timer when the modal is opened
-  };
+    startTimer();
 
+  };
   const handleNextpress = () => {
     const newIndex = currentExerciseIndex + 1;
     if (newIndex < filteredExercises.length) {
@@ -95,15 +98,21 @@ const ExerciseList = ({ route }) => {
       startTimer(); // Start timer for the next exercise
     }
   };
-
+  
   const handlePreviousPress = () => {
     const newIndex = currentExerciseIndex - 1;
     if (newIndex >= 0) {
       setCurrentExerciseIndex(newIndex);
-      resetTimer(); // Reset timer for the previous exercise
-      startTimer(); // Start timer for the previous exercise
+      resetTimer(); // Reset timer for the next exercise
+      startTimer(); // Start timer for the next exercise
     }
   };
+  
+  
+
+
+
+ 
 
   return (
     <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
@@ -124,9 +133,11 @@ const ExerciseList = ({ route }) => {
           </TouchableOpacity>
         </View>
         {/* Description */}
+
         <View style={styles.setDescriptionOverlay}>
           <Text style={styles.setDescriptionTitle}>{exerciseSet.description}</Text>
           <Text style={styles.setDescriptionText}>{exerciseSet.descText}</Text>
+
         </View>
         
         {/* Start Set Button */}
@@ -148,62 +159,73 @@ const ExerciseList = ({ route }) => {
                 <Text style={styles.cardName}>{exercise.name}</Text>
                 <Text style={styles.cardDifficulty}>Difficulty: {exercise.level}</Text>
               </View>
+              {exercise.completed && (
+                <View style={styles.completedMark}>
+                  <Text style={styles.completedText}>✓</Text>
+                </View>
+              )}
             </ImageBackground>
-          </View>
-        ))}
-
-        {/* Modal */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-            resetTimer(); // Reset timer when modal is closed
+            {filteredExercises.length > 0 && (
+  <Modal
+    animationType="slide"
+    transparent={true}
+    visible={modalVisible}
+    onRequestClose={() => {
+      setModalVisible(false);
+      resetTimer();
+    }}
+  >
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        {/* Close Button */}
+      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+        {/* Exercise Description */}
+        <Text style={styles.modalText}>Exercise Description:</Text>
+        <Text style={styles.exerciceNameModal}>{filteredExercises[currentExerciseIndex].name}</Text>
+        {/* Exercise Image */}
+        <ImageBackground
+          style={styles.exerciseImageModal}
+          source={{
+            uri: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${filteredExercises[currentExerciseIndex].images[0]}`
           }}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              {/* Close Button */}
-              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-              {/* Exercise Description */}
-              <Text style={styles.modalText}>Exercise Description:</Text>
-              <Text>{filteredExercises[currentExerciseIndex].name}</Text>
-              {/* Exercise Image */}
-              <ImageBackground
-                style={styles.exerciseImageModal}
-                source={{
-                  uri: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${filteredExercises[currentExerciseIndex].images[0]}`
-                }}
-              />
-              {/* Timer */}
-              <Text style={styles.modalText}>Time Remaining: {Math.floor(timer / 60)}:{timer % 60 < 10 ? `0${timer % 60}` : timer % 60}</Text>
-              {/* Progress Bar */}
-              {Platform.OS === 'ios' ? (
-                <ProgressViewIOS style={styles.progressBar} progress={progress} />
-              ) : (
-                <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={progress} />
-              )}
-              {/* Buttons */}
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.controlButton} onPress={handlePreviousPress}>
-                  <AntDesign name="stepbackward" size={24} color="green" />    
-                </TouchableOpacity> 
-                <TouchableOpacity style={styles.controlButton} onPress={pauseTimer}>
-                  <AntDesign name="pause" size={24} color="green" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.controlButton} onPress={startTimer}>
-                  <AntDesign name="play" size={24} color="green" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.controlButton} onPress={handleNextpress}>
-                  <AntDesign name="stepforward" size={24} color="green" />
-                </TouchableOpacity>
+        </ImageBackground>
+        {/* Timer */}
+        <Text style={styles.Modeltimer}>  {Math.floor(timer / 60) < 1 ? '00' : Math.floor(timer / 60)}:
+  {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}</Text>
+         {/* Progress Bar */}
+         <View style={styles.progressBarContainer}>
+                <CustomProgressBar progress={progress} />
               </View>
-            </View>
+       
+         {/* Buttons */}
+         <View style={styles.buttonContainer}>
+           <TouchableOpacity style={styles.controlButton} onPress={() => handlePreviousPress()}>
+           <AntDesign name="stepbackward" size={24} color="black" />  
+           </TouchableOpacity> 
+           <TouchableOpacity style={styles.controlButton} onPress={()=>pauseTimer()}>
+           <AntDesign name="play" size={24} color="black" />
+           </TouchableOpacity>
+           <TouchableOpacity style={styles.controlButton} onPress={()=> handleNextpress()}>
+           <AntDesign name="stepforward" size={24} color="black" />
+           </TouchableOpacity>
+         </View>
+         <View style={styles.DescriptionBox}>
+          <Text style={styles.DescriptionBoxtext}>Note:  {filteredExercises[currentExerciseIndex].instructions}</Text>
+         </View>
+      </View>
+    </View>
+  </Modal>
+)}
+
           </View>
-        </Modal>
+          
+        ))}
+
+        
+        
       </View>
     </ScrollView>
   );
@@ -269,6 +291,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: "center",
     fontFamily:"AppleSDGothicNeo-Light"
+    
   },
   completedMark: {
     position: "absolute",
@@ -280,6 +303,10 @@ const styles = StyleSheet.create({
     fontSize: 54,
     fontWeight: "bold",
   },
+  
+
+  
+ 
   setDescriptionContainer: {
     marginBottom: 10,
     marginTop: 10,
@@ -301,6 +328,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 29,
   },
+  
   setDescriptionText:{
     color: "white",
     fontSize: 15,
@@ -320,6 +348,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
   },
+  
   contentWrapper:{
     padding:20,
     backgroundColor:"#1f1f1f",
@@ -330,10 +359,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
+  
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#1e1e1f",
     borderRadius: 20,
     padding: 10,
     alignItems: "center",
@@ -345,21 +375,53 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    height: "90%",
+    height: "93%",
     width: "100%",
   },
   setDescriptionButtonText:{
     color: "white",
     fontWeight: "bold",
-  },
+  
+  }
+  ,
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
+    color:"white",
   },
-  progressBar: {
-    marginVertical: 10,
+  Modeltimer:{
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 40,
+    marginBottom: 5,
+    textAlign: "center",
+    fontFamily:"AppleSDGothicNeo-Light"
+  },
+  exerciceNameModal:{
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 15,
+    textAlign: "center",
+    fontFamily:"AppleSDGothicNeo-Light"
+  },
+  scrollContainer: {
+    maxHeight: 200,
+    marginBottom: 15,
+  },
+  descriptionText: {
+    fontSize: 16,
+  },
+  exerciseImage: {
+    width: "100%",
+    height: 200,
+    marginBottom: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
   },
   exerciseImageModal:{
     width: "100%",
@@ -370,8 +432,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginTop: 25,
+
   },
   buttonContainer: {
+    marginTop: "3%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -394,6 +458,30 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  progressBarContainer:{
+    backgroundColor: 'red',
+    width: '100%',
+    borderRadius: 10,
+    marginBottom: 5,
+  },
+  DescriptionBox:{
+    width: '95%',
+    height: 150,
+    backgroundColor: '#616163',
+    borderRadius: 10,
+    marginBottom: 10,
+    justifyContent: "center",
+    marginTop:12,
+    padding:10
+  },
+  DescriptionBoxtext:{
+    fontSize:14,
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontFamily:"AppleSDGothicNeo-Light"
+  }
+
 });
 
 export default ExerciseList;

@@ -1,10 +1,11 @@
-import React from "react";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons"; // Import appropriate icons
+import React,{useContext} from "react";
+import { View, Text, TouchableOpacity, TextInput,Image } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons"; // Import appropriate icons
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-native-responsive-screen";
-
+import { UserContext } from "./Context/UsernameContext"; // Import UserContext
 
 const MainPageHeader = ({ userName }) => {
+    const { profilePicture} = useContext(UserContext);
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
@@ -12,11 +13,8 @@ const MainPageHeader = ({ userName }) => {
                 <Text style={styles.userName}>Hi! {userName}</Text>
             </View>
             <View style={styles.iconsContainer}>
-                <TouchableOpacity>
-                    <Ionicons name="notifications" size={wp(10)} color="#63c138" />
-                </TouchableOpacity>
                 <TouchableOpacity >
-                    <MaterialIcons name="account-circle" size={wp(10)} color="white" />
+                <Image source={{ uri: profilePicture }} style={styles.image} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -70,6 +68,14 @@ const styles = {
         color: "white",
         marginLeft: 8,
     },
+    image:{
+        width:70,
+        height:70,
+        borderRadius:50,
+        backgroundColor:'gray',
+        justifyContent:'center',
+        alignItems:'center',
+    }
 };
 
 export default MainPageHeader;

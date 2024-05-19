@@ -18,7 +18,7 @@ const Signin = () => {
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { setUsername, setDifficulty } = useContext(UserContext); // handle the name to be shared with other screens
+    const { setUsername, setDifficulty,setUserId,setProfilePicture } = useContext(UserContext); // handle the name to be shared with other screens
 
 
     const toggleShowPassword = () => {
@@ -60,21 +60,31 @@ const Signin = () => {
                 email,
                 password
             });
-
-            // Handle success response (e.g., navigate to next screen)
-            console.log(response.data);
-            const userName = response.data.name; // Assuming the name is sent in the response
-            const diff = response.data.difficulty;
-            // Set username in context
-            setUsername(userName);
-            setDifficulty(diff);
-            navigation.navigate('Mainpage'); // Navigate to main menu
+            
+            if (response && response.data) {
+                // Handle success response (e.g., navigate to next screen)
+                console.log(response.data);
+                const userName = response.data.user.name; // Assuming the name is sent in the response
+                const diff = response.data.user.difficulty;
+                const id = response.data.user.id;
+                const pic=response.data.user.profilePicture;
+                
+                // Set username in context
+                setUsername(userName);
+                setDifficulty(diff);
+                setUserId(id); // Store user ID in context
+                setProfilePicture(`http://192.168.1.107:5000${pic}`); // Concatenate base URL with pic
+                navigation.navigate('Mainpage'); // Navigate to main menu
+            } else {
+                throw new Error('Invalid response received from server');
+            }
         } catch (error) {
             // Handle error response (e.g., display error message)
-            console.error('Login failed:', error.response.data.message);
-            Alert.alert('Login Failed', error.response.data.message);
+            console.error('Login failed:', error.message);
+            Alert.alert('Login Failed', 'An error occurred while signing in. Please try again later.');
         }
     };
+    
 
     return (
         <View style={styles.container}>

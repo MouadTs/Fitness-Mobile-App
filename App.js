@@ -6,6 +6,7 @@ import Age from "./Pages/Age";
 import Weight from "./Pages/weight";
 import ChooseGoal from "./Pages/ChooseGoal";
 import Signin from "./Pages/Signin";
+import Profile from "./Pages/Profile";
 // testing 
 import ExerciseList from "./Pages/ExerciceList";
 
@@ -29,6 +30,8 @@ export default function App() {
         <Stack.Screen name="Signin" component={Signin} options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="Mainpage" component={Mainpage} options={{headerShown:false}} ></Stack.Screen>
         <Stack.Screen name="ExerciseList" component={ExerciseList} options={{headerShown:false}}/>
+        <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}></Stack.Screen>
+
         
 
       </Stack.Navigator>

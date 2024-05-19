@@ -10,14 +10,18 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { BlurView } from "expo-blur";
+import { useNavigation } from "@react-navigation/native";
 
 const Mainpage = () => {
-  const { username, difficulty } = useContext(UserContext);
+  const { username, difficulty,profilePicture} = useContext(UserContext);
   const [selectedType, setSelectedType] = useState("All"); // Define selectedType state
-
+ const navigation = useNavigation();
   const handleTypePress = (type) => {
     setSelectedType(type);
   };
+  const handleProfilePress=()=>{
+    navigation.navigate('Profile');
+  }
 
   return (
     <View style={styles.container}>
@@ -31,8 +35,9 @@ const Mainpage = () => {
         <ScrollView horizontal>
         <ExerciseSets selectedType={"Biceps"}></ExerciseSets>
         <ExerciseSets selectedType={"Triceps"}></ExerciseSets>
-        <ExerciseSets selectedType={"Legs"}></ExerciseSets>
-        <ExerciseSets selectedType={"Biceps"}></ExerciseSets>
+        <ExerciseSets selectedType={"hamstrings"}></ExerciseSets>
+        <ExerciseSets selectedType={"chest"}></ExerciseSets>
+        <ExerciseSets selectedType={"shoulders"}></ExerciseSets>
 </ScrollView>
         <View style={styles.Textcontainer}>
           <Text style={styles.WorkoutPrograms}>Workouts Programs</Text>
@@ -80,8 +85,10 @@ const Mainpage = () => {
           <ScrollView contentContainerStyle={styles.scrolledPrograms} >
             <ExerciseSets selectedType={"Biceps"} />
             <ExerciseSets selectedType={"Triceps"} />
-            <ExerciseSets selectedType={"Legs"} />   
-             <ExerciseSets selectedType={"Biceps"} />
+            <ExerciseSets selectedType={"hamstrings"} />   
+            <ExerciseSets selectedType={"chest"}/>
+            <ExerciseSets selectedType={"shoulders"} />
+
 
           </ScrollView>
         )}
@@ -89,21 +96,33 @@ const Mainpage = () => {
           <ScrollView  contentContainerStyle={styles.scrolledPrograms}>
             <ExerciseSets selectedType={"Biceps"} />
             <ExerciseSets selectedType={"Triceps"} />
+            <ExerciseSets selectedType={"chest"} />
+            <ExerciseSets selectedType={"shoulders"} />
+
+
           </ScrollView>
         )}
         {selectedType === "Lower Body" && (
           <ScrollView  contentContainerStyle={styles.scrolledPrograms}l>
             
-            <ExerciseSets selectedType={"Legs"} />   
+            <ExerciseSets selectedType={"hamstrings"} />   
 
           </ScrollView>
         )}
+        {selectedType === "Chest" && (
+          <ScrollView  contentContainerStyle={styles.scrolledPrograms}l>
+            
+            <ExerciseSets selectedType={"chest"} />   
+
+          </ScrollView>
+        )}
+
         {/* Add similar conditional rendering for other types */}
       </ScrollView>
       <View style={styles.footerContainer}>
         <BlurView intensity={40} style={styles.blurContainer} />
         <TouchableOpacity style={styles.footerButton}>
-          <AntDesign name="home" size={24} color="white" />
+          <AntDesign name="home" size={24} color="#63c138" />
           <Text style={styles.footerButtonText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
@@ -114,7 +133,7 @@ const Mainpage = () => {
           <Ionicons name="stats-chart" size={24} color="white" />
           <Text style={styles.footerButtonText}>Stats</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleProfilePress}>
           <MaterialCommunityIcons name="face-man-profile" size={24} color="white" />
           <Text style={styles.footerButtonText}>Profile</Text>
         </TouchableOpacity>

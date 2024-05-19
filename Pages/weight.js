@@ -4,6 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import BackButton from "../assets/SmallComponent/BackButton";
 import NextButton from "../assets/SmallComponent/NextButton";
 import { useNavigation } from "@react-navigation/native";
+import { Feather } from '@expo/vector-icons';
 
 const Weight = () => {
     const [selectedWeight, setSelectedWeight] = useState(60);

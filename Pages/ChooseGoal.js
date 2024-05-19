@@ -10,6 +10,8 @@ const ChooseGoal = () => {
     const navigation = useNavigation();
     const [selectedItems, setSelectedItems] = useState([]);
     const { userId, setDifficulty } = useContext(UserContext); // Access userId from context
+    console.log('UserId:', userId); // Debug log
+
 
     const handleNextbutton = async () => {
         // Ensure a plan is selected
@@ -17,7 +19,6 @@ const ChooseGoal = () => {
             Alert.alert('Please select a plan');
             return; // Do nothing if no plan is selected
         }
-        console.log("ID: ", userId);
 
         try {
             // Extract difficulty from the selected plan
@@ -32,6 +33,9 @@ const ChooseGoal = () => {
             console.error('Error updating difficulty:', error);
             // Handle error as needed
         }
+    }
+    const handleBackbutton=() => {
+        navigation.navigate('Weight');
     }
 
     // Define your list of plans
@@ -72,7 +76,7 @@ const ChooseGoal = () => {
                 style={styles.planList}
             />
 
-            <View style={styles.backbutton}><BackButton /></View>
+            <View style={styles.backbutton}><BackButton onPress={handleBackbutton} /></View>
             <View style={styles.nextbutton}><NextButton onPress={handleNextbutton} /></View>
         </View>
     )

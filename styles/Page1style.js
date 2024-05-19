@@ -77,6 +77,10 @@ export const styles = StyleSheet.create({
         borderRadius: 2, // to round the corners
         marginBottom:3,
     },
+    test:{
+        height:20,
+        width:20
+    }
     
     
 });
