@@ -6,13 +6,18 @@ import { UserContext } from "./Context/UsernameContext";
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
-
-const BASE_URL = 'http://192.168.1.107:5000'; // Adjust to your server's base URL
+import ProfileCards from "./ProfileCards"
+import config from "../Backend/config";
+const url=config.apiBaseUrl;
+const BASE_URL = url.replace('/api',''); // Adjust to your server's base URL
+console.log("HA URL : ",BASE_URL);
 
 const Profile = () => {
-    const { userId, username, difficulty, setDifficulty, profilePicture, setProfilePicture } = useContext(UserContext);
+    const { userId, username, difficulty, setDifficulty, profilePicture, setProfilePicture,caloriesburned } = useContext(UserContext);
     const [selectedImage, setSelectedImage] = useState(null);
     const navigation = useNavigation();
+    
+    
 
     useEffect(() => {
         (async () => {
@@ -31,13 +36,13 @@ const Profile = () => {
 
     const handleDiffChange = async () => {
         try {
-            const response = await axios.post(`${BASE_URL}/api/auth/difficulty`, { userId, difficulty });
+            const response = await axios.post(`${config.apiBaseUrl}/auth/difficulty`, { userId, difficulty });
             console.log("Difficulty updated");
         } catch (error) {
             console.error('Error updating difficulty:', error);
         }
     };
-
+     console.log(caloriesburned)
     const handleDifficultyChange = (value) => {
         setDifficulty(value);
         handleDiffChange();
@@ -51,14 +56,13 @@ const Profile = () => {
         });
 
         console.log("Image picker result:", result); // Inspect the entire result object
-
         if (!result.cancelled) {
             const { uri } = result.assets ? result.assets[0] : result;
             console.log("Image selected:", uri);
             setSelectedImage(uri);
         }
     };
-
+    
     const uploadImage = async () => {
         if (selectedImage) {
             const formData = new FormData();
@@ -70,7 +74,7 @@ const Profile = () => {
             formData.append('userId', userId);
 
             try {
-                const response = await axios.post(`${BASE_URL}/api/auth/uploadProfilePicture`, formData, {
+                const response = await axios.post(`${config.apiBaseUrl}/auth/uploadProfilePicture`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -95,6 +99,7 @@ const Profile = () => {
             uploadImage();
         }
     }, [selectedImage]);
+    console.log('Profile picture URL:', profilePicture);
 
     return (
         <View style={styles.container}>
@@ -110,7 +115,8 @@ const Profile = () => {
                         {selectedImage ? (
                             <Image source={{ uri: selectedImage }} style={styles.image} />
                         ) : profilePicture ? (
-                            <Image source={{ uri: profilePicture }} style={styles.image} />
+                            <Image source={{ uri: `${profilePicture}?timestamp=${new Date().getTime()}` }} style={styles.image} />
+
                         ) : (
                             <View style={styles.imagePlaceholder}>
                                 <Text style={styles.imagePlaceholderText}>No Image</Text>
@@ -155,6 +161,9 @@ const Profile = () => {
                     }}
                 />
             </View>
+            <ProfileCards ></ProfileCards>
+            <Text style={styles.calories}>Calories Burned : {caloriesburned}</Text>
+            
         </View>
     );
 };
@@ -230,7 +239,18 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingRight: 30,
     },
+    calories:{
+        fontSize:19,
+        fontFamily: 'Helvetica',
+        fontWeight: 'bold',
+        color: 'white',
+        marginTop: 10,
+        marginBottom: 10,
+        paddingRight: 30,
+        backgroundColor: '#333',
+    }
 });
+///////////////////////////////////
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
@@ -255,6 +275,7 @@ const pickerSelectStyles = StyleSheet.create({
         paddingRight: 30,
         backgroundColor: '#333',
     },
+   
 });
 
 export default Profile;

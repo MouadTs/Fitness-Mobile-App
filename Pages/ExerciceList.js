@@ -1,22 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, ImageBackground, TouchableOpacity, Modal, Platform} from "react-native";
-import { Fontisto } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useState, useEffect, useContext } from "react";
+import { View, Text, ScrollView, StyleSheet, ImageBackground, TouchableOpacity, Modal, Alert } from "react-native";
+import { Fontisto, SimpleLineIcons, AntDesign } from '@expo/vector-icons';
 import CustomProgressBar from "./CustomProgressBar";
+import axios from "axios";
+import { UserContext } from "./Context/UsernameContext";
+import config from "../Backend/config";
 
-
-
-// SetDescriptionCard component
 const SetDescriptionCard = ({ exerciseSet }) => {
   return (
     <View style={styles.setDescriptionContainer}>
       <ImageBackground
         style={styles.setDescriptionBackground}
-        source={exerciseSet.image} // Use the image from exerciseSet prop
-      >
-        
-      </ImageBackground>
+        source={exerciseSet.image}
+      />
     </View>
   );
 };
@@ -29,9 +25,8 @@ const ExerciseList = ({ route }) => {
   const [timer, setTimer] = useState(120); // 2 minutes in seconds
   const [progress, setProgress] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-
- 
+  const [isSetFinished, setIsSetFinished] = useState(false);
+  const { userId, setCaloriesburned } = useContext(UserContext);
 
   useEffect(() => {
     const fetchExerciseData = async () => {
@@ -40,14 +35,13 @@ const ExerciseList = ({ route }) => {
           "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json"
         );
         const data = await response.json();
-
         const filtered = data.filter(
           (exercise) =>
             exercise.level.toLowerCase() === exerciseSet.diff.toLowerCase() &&
             (exercise.primaryMuscles.includes(exerciseSet.name.toLowerCase()) ||
               exercise.secondaryMuscles.includes(exerciseSet.name.toLowerCase()))
         );
-        setFilteredExercises(filtered.slice(0, 10)); // Limit to first 10 exercises
+        setFilteredExercises(filtered.slice(0, 10));
       } catch (error) {
         console.error("Error fetching exercise data:", error);
       }
@@ -55,6 +49,7 @@ const ExerciseList = ({ route }) => {
 
     fetchExerciseData();
   }, [exerciseSet]);
+
   useEffect(() => {
     if (timerActive) {
       const timerId = setInterval(() => {
@@ -62,14 +57,13 @@ const ExerciseList = ({ route }) => {
           setTimer((prevTimer) => prevTimer - 1);
           setProgress((prevProgress) => prevProgress + 1 / 120); // Adjust based on the total time
         } else {
-          // Timer finished, move to the next exercise
           handleNextpress();
         }
       }, 1000);
-
       return () => clearInterval(timerId);
     }
   }, [timerActive, timer]);
+
   const startTimer = () => {
     setTimerActive(true);
   };
@@ -84,68 +78,86 @@ const ExerciseList = ({ route }) => {
     setTimerActive(false);
   };
 
-  const startSet = () => {
+  const startSet = async () => {
     resetTimer();
     setModalVisible(true);
     startTimer();
-
+    
+    // Call API to send exercise date
+    try {
+      const response = await axios.post(`${config.apiBaseUrl}/auth/addExerciseDate`, { userId });
+      console.log("Exercise date added successfully: ", response.data.exerciseDates);
+    } catch (error) {
+      console.error("Error adding exercise date: ", error);
+    }
   };
+
   const handleNextpress = () => {
     const newIndex = currentExerciseIndex + 1;
     if (newIndex < filteredExercises.length) {
       setCurrentExerciseIndex(newIndex);
-      resetTimer(); // Reset timer for the next exercise
-      startTimer(); // Start timer for the next exercise
+      resetTimer();
+      startTimer();
+    } else {
+      setIsSetFinished(true);
+      Alert.alert('Set is finished');
+      sendCaloriesToDatabase();
     }
   };
-  
+
   const handlePreviousPress = () => {
     const newIndex = currentExerciseIndex - 1;
     if (newIndex >= 0) {
       setCurrentExerciseIndex(newIndex);
-      resetTimer(); // Reset timer for the next exercise
-      startTimer(); // Start timer for the next exercise
+      resetTimer();
+      startTimer();
     }
   };
-  
-  
 
+  const sendCaloriesToDatabase = async () => {
+    if (!exerciseSet.calories) {
+      Alert.alert('No calories data available');
+      return;
+    }
 
-
- 
+    try {
+      const calories = exerciseSet.calories;
+      setCaloriesburned(exerciseSet.calories);
+      const response = await axios.post(`${config.apiBaseUrl}/auth/Calories`, { userId, calories });
+      console.log(response.data);
+      console.log(exerciseSet.calories);
+      if (response.data && response.data.calories !== undefined) {
+        console.log("Calories sent successfully: ", response.data.calories);
+        setCaloriesburned(response.data.calories);
+      } else {
+        console.log("Calories response missing calories data.");
+      }
+    } catch (error) {
+      console.error('Error sending calories:', error);
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
-      {/* Render the Set Description Card */}
       <SetDescriptionCard exerciseSet={exerciseSet} />
-
-      {/* Rest of your ExerciseList component wrapped in a View with padding */}
       <View style={styles.contentWrapper}>
-        {/* Buttons for Set Description */}
         <View style={styles.setDescriptionButtonContainer}>
           <TouchableOpacity style={styles.setDescriptionButton}>
             <Fontisto name="stopwatch" size={24} color="white" />
-            <Text style={styles.setDescriptionButtonText}>   {exerciseSet.time}</Text>
+            <Text style={styles.setDescriptionButtonText}> {exerciseSet.time}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.setDescriptionButton}>
-          <SimpleLineIcons name="energy" size={24} color="white" />
-            <Text style={styles.setDescriptionButtonText}>  {exerciseSet.calories} Kcal </Text>
+            <SimpleLineIcons name="energy" size={24} color="white" />
+            <Text style={styles.setDescriptionButtonText}> {exerciseSet.calories} Kcal </Text>
           </TouchableOpacity>
         </View>
-        {/* Description */}
-
         <View style={styles.setDescriptionOverlay}>
           <Text style={styles.setDescriptionTitle}>{exerciseSet.description}</Text>
           <Text style={styles.setDescriptionText}>{exerciseSet.descText}</Text>
-
         </View>
-        
-        {/* Start Set Button */}
         <TouchableOpacity style={styles.startSetButton} onPress={startSet}>
           <Text style={styles.startSetText}>Start Workout</Text>
         </TouchableOpacity>
-
-        {/* Exercise Cards */}
         {filteredExercises.map((exercise, index) => (
           <View key={exercise.id} style={styles.cardContainer}>
             <ImageBackground
@@ -166,70 +178,65 @@ const ExerciseList = ({ route }) => {
               )}
             </ImageBackground>
             {filteredExercises.length > 0 && (
-  <Modal
-    animationType="slide"
-    transparent={true}
-    visible={modalVisible}
-    onRequestClose={() => {
-      setModalVisible(false);
-      resetTimer();
-    }}
-  >
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        {/* Close Button */}
-      <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-        <Text style={styles.closeButtonText}>Close</Text>
-      </TouchableOpacity>
-        {/* Exercise Description */}
-        <Text style={styles.modalText}>Exercise Description:</Text>
-        <Text style={styles.exerciceNameModal}>{filteredExercises[currentExerciseIndex].name}</Text>
-        {/* Exercise Image */}
-        <ImageBackground
-          style={styles.exerciseImageModal}
-          source={{
-            uri: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${filteredExercises[currentExerciseIndex].images[0]}`
-          }}
-        >
-        </ImageBackground>
-        {/* Timer */}
-        <Text style={styles.Modeltimer}>  {Math.floor(timer / 60) < 1 ? '00' : Math.floor(timer / 60)}:
-  {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}</Text>
-         {/* Progress Bar */}
-         <View style={styles.progressBarContainer}>
-                <CustomProgressBar progress={progress} />
-              </View>
-       
-         {/* Buttons */}
-         <View style={styles.buttonContainer}>
-           <TouchableOpacity style={styles.controlButton} onPress={() => handlePreviousPress()}>
-           <AntDesign name="stepbackward" size={24} color="black" />  
-           </TouchableOpacity> 
-           <TouchableOpacity style={styles.controlButton} onPress={()=>pauseTimer()}>
-           <AntDesign name="play" size={24} color="black" />
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.controlButton} onPress={()=> handleNextpress()}>
-           <AntDesign name="stepforward" size={24} color="black" />
-           </TouchableOpacity>
-         </View>
-         <View style={styles.DescriptionBox}>
-          <Text style={styles.DescriptionBoxtext}>Note:  {filteredExercises[currentExerciseIndex].instructions}</Text>
-         </View>
-      </View>
-    </View>
-  </Modal>
-)}
-
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(false);
+                  resetTimer();
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                      <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.modalText}>Exercise Description:</Text>
+                    <Text style={styles.exerciceNameModal}>{filteredExercises[currentExerciseIndex].name}</Text>
+                    <ImageBackground
+                      style={styles.exerciseImageModal}
+                      source={{
+                        uri: `https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${filteredExercises[currentExerciseIndex].images[0]}`
+                      }}
+                    />
+                    <Text style={styles.Modeltimer}>
+                      {Math.floor(timer / 60) < 1 ? '00' : Math.floor(timer / 60)}:
+                      {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+                    </Text>
+                    <View style={styles.progressBarContainer}>
+                      <CustomProgressBar progress={progress} />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity style={styles.controlButton} onPress={handlePreviousPress}>
+                        <AntDesign name="stepbackward" size={24} color="black" />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.controlButton} onPress={pauseTimer}>
+                        <AntDesign name="play" size={24} color="black" />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.controlButton} onPress={handleNextpress}>
+                        <AntDesign name="stepforward" size={24} color="black" />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.DescriptionBox}>
+                      <Text style={styles.DescriptionBoxtext}>Note: {filteredExercises[currentExerciseIndex].instructions}</Text>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
+            )}
           </View>
-          
         ))}
-
-        
-        
+        {isSetFinished && (
+          <View style={styles.setFinishedContainer}>
+            <Text style={styles.setFinishedText}>Set Finished!</Text>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -280,7 +287,7 @@ const styles = StyleSheet.create({
   startSetButton: {
     backgroundColor: "#73c12f",
     padding: 10,
-    height:70,
+    height: 70,
     borderRadius: 15,
     marginBottom: 10,
     justifyContent: "center",
@@ -290,8 +297,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
     textAlign: "center",
-    fontFamily:"AppleSDGothicNeo-Light"
-    
+    fontFamily: "AppleSDGothicNeo-Light",
   },
   completedMark: {
     position: "absolute",
@@ -303,10 +309,6 @@ const styles = StyleSheet.create({
     fontSize: 54,
     fontWeight: "bold",
   },
-  
-
-  
- 
   setDescriptionContainer: {
     marginBottom: 10,
     marginTop: 10,
@@ -328,11 +330,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 29,
   },
-  
-  setDescriptionText:{
+  setDescriptionText: {
     color: "white",
     fontSize: 15,
-    fontWeight :"200"
+    fontWeight: "200",
   },
   setDescriptionButtonContainer: {
     flexDirection: "row",
@@ -342,16 +343,15 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Rounded corners
   },
   setDescriptionButton: {
-    flexDirection:"row",
+    flexDirection: "row",
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 20,
     alignItems: "center",
   },
-  
-  contentWrapper:{
-    padding:20,
-    backgroundColor:"#1f1f1f",
+  contentWrapper: {
+    padding: 20,
+    backgroundColor: "#1f1f1f",
     color: "white",
   },
   centeredView: {
@@ -359,7 +359,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 22,
-  
   },
   modalView: {
     margin: 20,
@@ -378,34 +377,32 @@ const styles = StyleSheet.create({
     height: "93%",
     width: "100%",
   },
-  setDescriptionButtonText:{
+  setDescriptionButtonText: {
     color: "white",
     fontWeight: "bold",
-  
-  }
-  ,
+  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
-    color:"white",
+    color: "white",
   },
-  Modeltimer:{
+  Modeltimer: {
     color: "white",
     fontWeight: "bold",
     fontSize: 40,
     marginBottom: 5,
     textAlign: "center",
-    fontFamily:"AppleSDGothicNeo-Light"
+    fontFamily: "AppleSDGothicNeo-Light",
   },
-  exerciceNameModal:{
+  exerciceNameModal: {
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
     marginBottom: 15,
     textAlign: "center",
-    fontFamily:"AppleSDGothicNeo-Light"
+    fontFamily: "AppleSDGothicNeo-Light",
   },
   scrollContainer: {
     maxHeight: 200,
@@ -423,7 +420,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
   },
-  exerciseImageModal:{
+  exerciseImageModal: {
     width: "100%",
     height: 360,
     marginBottom: 15,
@@ -432,7 +429,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginTop: 25,
-
   },
   buttonContainer: {
     marginTop: "3%",
@@ -458,30 +454,38 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-  progressBarContainer:{
+  progressBarContainer: {
     backgroundColor: 'red',
     width: '100%',
     borderRadius: 10,
     marginBottom: 5,
   },
-  DescriptionBox:{
+  DescriptionBox: {
     width: '95%',
     height: 150,
     backgroundColor: '#616163',
     borderRadius: 10,
     marginBottom: 10,
     justifyContent: "center",
-    marginTop:12,
-    padding:10
+    marginTop: 12,
+    padding: 10,
   },
-  DescriptionBoxtext:{
-    fontSize:14,
+  DescriptionBoxtext: {
+    fontSize: 14,
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
-    fontFamily:"AppleSDGothicNeo-Light"
-  }
-
+    fontFamily: "AppleSDGothicNeo-Light",
+  },
+  setFinishedContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  setFinishedText: {
+    color: '#73c12f',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
 });
 
 export default ExerciseList;

@@ -1,11 +1,15 @@
 import React,{useContext} from "react";
 import { View, Text, TouchableOpacity, TextInput,Image } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons"; // Import appropriate icons
 import { widthPercentageToDP as wp , heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { UserContext } from "./Context/UsernameContext"; // Import UserContext
+import { useNavigation } from "@react-navigation/native";
 
 const MainPageHeader = ({ userName }) => {
     const { profilePicture} = useContext(UserContext);
+    const navigation = useNavigation();
+    const handleIconPressed = () => {
+        navigation.navigate("Profile");
+    };
     return (
         <View style={styles.container}>
             <View style={styles.textContainer}>
@@ -13,7 +17,7 @@ const MainPageHeader = ({ userName }) => {
                 <Text style={styles.userName}>Hi! {userName}</Text>
             </View>
             <View style={styles.iconsContainer}>
-                <TouchableOpacity >
+                <TouchableOpacity onPress={handleIconPressed} >
                 <Image source={{ uri: profilePicture }} style={styles.image} />
                 </TouchableOpacity>
             </View>

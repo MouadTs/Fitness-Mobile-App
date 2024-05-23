@@ -5,6 +5,7 @@ import NextButton from "../assets/SmallComponent/NextButton";
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { UserContext } from "./Context/UsernameContext"; // Import UserContext
+import config from "../Backend/config";
 
 const ChooseGoal = () => {
     const navigation = useNavigation();
@@ -25,7 +26,7 @@ const ChooseGoal = () => {
             const difficulty = selectedItems[0].name.trim();
             setDifficulty(difficulty);
             // Send request to update difficulty
-            const response = await axios.post('http://192.168.1.107:5000/api/auth/difficulty',
+            const response = await axios.post(`${config.apiBaseUrl}/auth/difficulty`,
              { userId, difficulty });
             console.log(response.data);
             navigation.navigate('Mainpage');

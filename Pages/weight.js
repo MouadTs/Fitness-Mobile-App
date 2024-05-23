@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState,useContext} from "react";
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import BackButton from "../assets/SmallComponent/BackButton";
 import NextButton from "../assets/SmallComponent/NextButton";
 import { useNavigation } from "@react-navigation/native";
-import { Feather } from '@expo/vector-icons';
+import { UserContext } from "./Context/UsernameContext";
+import axios from "axios";
+import config from "../Backend/config";
 
 const Weight = () => {
     const [selectedWeight, setSelectedWeight] = useState(60);
+    const { userId,setWeight} = useContext(UserContext); // Access userId from context
     const navigation = useNavigation();
 
     const handleBackbutton = () => {
@@ -17,9 +20,27 @@ const Weight = () => {
         navigation.navigate('ChooseGoal');
     }
 
-    const handleWeightSelection = (weight) => {
-        setSelectedWeight(weight);
-    }
+    const handleWeightSelection = async (weight) => {
+        if (!selectedWeight) {
+            Alert.alert('Please select a weight');
+            return;
+        }
+        try {
+            
+            setWeight(weight);// Pour le context 
+            const response = await axios.post(`${config.apiBaseUrl}/auth/Weight`, { userId, weight });
+            if (response.data && response.data.weight !== undefined) {
+                console.log("Weight is: ", response.data.weight);
+                setSelectedWeight(weight);
+                console.log("weight updated successfully");
+            } 
+        } catch (error) {
+            console.error('Error updating weight:', error);
+        }
+    };
+    
+    
+    
 
     return (
         <View style={styles.container}>

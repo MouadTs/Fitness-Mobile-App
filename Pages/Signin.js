@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { UserContext } from "./Context/UsernameContext.js";
 import axios from 'axios';
 import CustomKeyboardView from "../components/CustomKeyboardView.js";
+import config from "../Backend/config.js";
 
 
 const Signin = () => {
@@ -18,7 +19,7 @@ const Signin = () => {
     const [passwordFocused, setPasswordFocused] = useState(false);
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const { setUsername, setDifficulty,setUserId,setProfilePicture } = useContext(UserContext); // handle the name to be shared with other screens
+    const { setUsername, setDifficulty,setUserId,setProfilePicture,profilePicture,setWeight,setCaloriesburned,setExerciseDates } = useContext(UserContext); // handle the name to be shared with other screens
 
 
     const toggleShowPassword = () => {
@@ -56,7 +57,7 @@ const Signin = () => {
             return;
         }
         try {
-            const response = await axios.post('http://192.168.1.107:5000/api/auth/login', {
+            const response = await axios.post(`${config.apiBaseUrl}/auth/login`, {
                 email,
                 password
             });
@@ -68,12 +69,21 @@ const Signin = () => {
                 const diff = response.data.user.difficulty;
                 const id = response.data.user.id;
                 const pic=response.data.user.profilePicture;
+                const pic1=config.apiBaseUrl.replace('/api','');
                 
                 // Set username in context
+                console.log("fik 9da w 9da :",response.data.user.weight);
+                console.log(response.data.user.exerciseDates);
+                setWeight(response.data.user.weight);
+                setCaloriesburned(response.data.user.calories);
                 setUsername(userName);
                 setDifficulty(diff);
                 setUserId(id); // Store user ID in context
-                setProfilePicture(`http://192.168.1.107:5000${pic}`); // Concatenate base URL with pic
+           
+                setExerciseDates(response.data.user.exerciseDates);// set exercise dates
+                setProfilePicture(`${pic1}${pic}`); // Concatenate base URL with pic
+                console.log(profilePicture);
+                console.log(profilePicture);
                 navigation.navigate('Mainpage'); // Navigate to main menu
             } else {
                 throw new Error('Invalid response received from server');
@@ -83,6 +93,8 @@ const Signin = () => {
             console.error('Login failed:', error.message);
             Alert.alert('Login Failed', 'An error occurred while signing in. Please try again later.');
         }
+        
+        
     };
     
 

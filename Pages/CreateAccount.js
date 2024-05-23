@@ -9,6 +9,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { UserContext } from "./Context/UsernameContext.js";
 import axios from 'axios';
 import CustomKeyboardView from "../components/CustomKeyboardView.js";
+import config from "../Backend/config.js";
+
 
 const CreateAccount = () => {
     const [name, setName] = useState('');
@@ -70,7 +72,7 @@ const CreateAccount = () => {
             return;
         }
 
-        const response = await axios.post('http://192.168.1.107:5000/api/auth/register', {
+        const response = await axios.post(`${config.apiBaseUrl}/auth/register`, {
             name,
             email,
             password

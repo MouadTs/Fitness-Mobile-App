@@ -10,6 +10,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { BlurView } from "expo-blur";
+
 import { useNavigation } from "@react-navigation/native";
 
 const Mainpage = () => {
@@ -21,6 +22,9 @@ const Mainpage = () => {
   };
   const handleProfilePress=()=>{
     navigation.navigate('Profile');
+  }
+  const handleStatsPress=()=>{
+    navigation.navigate('Stats');
   }
 
   return (
@@ -122,14 +126,14 @@ const Mainpage = () => {
       <View style={styles.footerContainer}>
         <BlurView intensity={40} style={styles.blurContainer} />
         <TouchableOpacity style={styles.footerButton}>
-          <AntDesign name="home" size={24} color="#63c138" />
+        <Ionicons name="home" size={24} color="#63c138" />
           <Text style={styles.footerButtonText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
           <SimpleLineIcons name="energy" size={24} color="white" />
           <Text style={styles.footerButtonText}>Programs</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleStatsPress}>
           <Ionicons name="stats-chart" size={24} color="white" />
           <Text style={styles.footerButtonText}>Stats</Text>
         </TouchableOpacity>

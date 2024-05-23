@@ -9,6 +9,7 @@ import Signin from "./Pages/Signin";
 import Profile from "./Pages/Profile";
 // testing 
 import ExerciseList from "./Pages/ExerciceList";
+import Stats from "./Pages/Stats";
 
 //
 import { NavigationContainer } from "@react-navigation/native";
@@ -31,6 +32,7 @@ export default function App() {
         <Stack.Screen name="Mainpage" component={Mainpage} options={{headerShown:false}} ></Stack.Screen>
         <Stack.Screen name="ExerciseList" component={ExerciseList} options={{headerShown:false}}/>
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}></Stack.Screen>
+        <Stack.Screen name="Stats" component={Stats} options={{headerShown:false}}></Stack.Screen>
 
         
 
