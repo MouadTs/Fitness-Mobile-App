@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, StyleSheet, View, TouchableOpacity, Image, Platform } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity, Image, Platform ,ScrollView} from "react-native";
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "./Context/UsernameContext";
 import RNPickerSelect from 'react-native-picker-select';
 import * as ImagePicker from 'expo-image-picker';
 import axios from "axios";
-import ProfileCards from "./ProfileCards"
+import ProfileCards from "../components/ProfileCards";
+import CaloriesCard from "../components/CaloriesCard"; // Importing the new CaloriesCard component
 import config from "../Backend/config";
-const url=config.apiBaseUrl;
-const BASE_URL = url.replace('/api',''); // Adjust to your server's base URL
-console.log("HA URL : ",BASE_URL);
+import { FontAwesome6 } from '@expo/vector-icons';
+import Footer from "../components/Footer";
+
+
+const url = config.apiBaseUrl;
+const BASE_URL = url.replace('/api', ''); // Adjust to your server's base URL
+console.log("HA URL : ", BASE_URL);
 
 const Profile = () => {
-    const { userId, username, difficulty, setDifficulty, profilePicture, setProfilePicture,caloriesburned } = useContext(UserContext);
+    const { userId, username, difficulty, setDifficulty, profilePicture, setProfilePicture, caloriesburned } = useContext(UserContext);
     const [selectedImage, setSelectedImage] = useState(null);
     const navigation = useNavigation();
-    
-    
 
     useEffect(() => {
         (async () => {
@@ -42,11 +45,12 @@ const Profile = () => {
             console.error('Error updating difficulty:', error);
         }
     };
-     console.log(caloriesburned)
+
     const handleDifficultyChange = (value) => {
         setDifficulty(value);
         handleDiffChange();
     };
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -62,7 +66,7 @@ const Profile = () => {
             setSelectedImage(uri);
         }
     };
-    
+
     const uploadImage = async () => {
         if (selectedImage) {
             const formData = new FormData();
@@ -99,6 +103,7 @@ const Profile = () => {
             uploadImage();
         }
     }, [selectedImage]);
+
     console.log('Profile picture URL:', profilePicture);
 
     return (
@@ -116,7 +121,6 @@ const Profile = () => {
                             <Image source={{ uri: selectedImage }} style={styles.image} />
                         ) : profilePicture ? (
                             <Image source={{ uri: `${profilePicture}?timestamp=${new Date().getTime()}` }} style={styles.image} />
-
                         ) : (
                             <View style={styles.imagePlaceholder}>
                                 <Text style={styles.imagePlaceholderText}>No Image</Text>
@@ -126,8 +130,11 @@ const Profile = () => {
                 </TouchableOpacity>
                 <Text style={styles.username}>{username}</Text>
             </View>
-            <View style={styles.difficultyContainer}>
-                <Text style={styles.difficultyText}>Current Difficulty: {difficulty}</Text>
+            <View style={styles.concards}>
+            <View style={styles.difficultyCard}>
+                <View style={{flexDirection:"row", justifyContent:"space-between",width:"100%"}}>
+                <Text style={styles.difficultyText}>Difficulty:</Text>
+                <FontAwesome6 name="bolt-lightning" size={24} color="black" /></View>
                 <RNPickerSelect
                     onValueChange={handleDifficultyChange}
                     items={[
@@ -138,32 +145,38 @@ const Profile = () => {
                     style={{
                         inputIOS: {
                             ...pickerSelectStyles.inputIOS,
-                            backgroundColor: '#333',
-                            color: 'white',
+                            backgroundColor: '#bcc982',
+                            color: '#333',
+                            fontSize: 16,
+                            fontWeight: 'bold',
                         },
                         inputAndroid: {
                             ...pickerSelectStyles.inputAndroid,
-                            backgroundColor: '#333',
-                            color: 'white',
+                            backgroundColor: '#bcc982',
+                            color: '#333',
+                            fontSize: 16,
+                            fontWeight: 'bold',
                         },
                         placeholder: {
-                            color: 'white',
+                            color: '#333',
                         },
                         iconContainer: {
                             top: 10,
-                            right: 2,
+                            right: 12,
                         }
                     }}
                     value={difficulty}
                     useNativeAndroidPickerStyle={false}
                     Icon={() => {
-                        return <AntDesign name="arrowdown" size={24} color="white" />;
+                        return <AntDesign name="arrowdown" size={24} color="#333" />;
                     }}
                 />
+                
             </View>
-            <ProfileCards ></ProfileCards>
-            <Text style={styles.calories}>Calories Burned : {caloriesburned}</Text>
-            
+            <ProfileCards /></View>
+            <View style={{alignItems:"center"}}>
+            <CaloriesCard caloriesburned={caloriesburned} /></View>
+            <Footer currentPage={"Profile"}></Footer>
         </View>
     );
 };
@@ -192,7 +205,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
-        
     },
     profileImage: {
         width: 150,
@@ -228,29 +240,48 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 30,
     },
-    difficultyContainer: {
-        flexDirection: 'row',
-        marginTop: 30,
+    difficultyCard: {
+        width: "45%",
+        height: 200,
+        marginHorizontal: 5,
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: '#bcc982',
+        padding: 10,
+        paddingTop:30,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 2, height: 5 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+        marginVertical: 10,
         alignItems: 'center',
+        justifyContent: 'flex-start',
     },
     difficultyText: {
-        color: "white",
-        fontSize: 16,
-        marginBottom: 10,
-        paddingRight: 30,
-    },
-    calories:{
-        fontSize:19,
-        fontFamily: 'Helvetica',
+        fontSize: 18,
         fontWeight: 'bold',
-        color: 'white',
-        marginTop: 10,
-        marginBottom: 10,
-        paddingRight: 30,
-        backgroundColor: '#333',
-    }
+        color: '#333',
+        marginBottom: 20,
+        textAlign: 'center',
+        justifyContent: 'flex-start',
+    },
+    concards:{
+        flexDirection: 'row', // Added to make the cards appear in a row
+            justifyContent: 'space-between', // Added to evenly space the cards in the row
+            alignItems: 'center', // Adjust as needed
+            width: '100%', // Adjust the width as needed
+            paddingHorizontal: 20, // Added for spacing
+            paddingVertical: 10, // Added for spacing
+            marginBottom: 10, // Added for spacing
+    },
+    achievementsContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 20,
+    },
 });
-///////////////////////////////////
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
@@ -260,9 +291,9 @@ const pickerSelectStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 4,
-        color: 'white',
+        color: '#333',
         paddingRight: 30,
-        backgroundColor: '#333',
+        backgroundColor: '#f9a825',
     },
     inputAndroid: {
         fontSize: 16,
@@ -271,11 +302,10 @@ const pickerSelectStyles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: 'gray',
         borderRadius: 8,
-        color: 'white',
+        color: '#333',
         paddingRight: 30,
-        backgroundColor: '#333',
+        backgroundColor: '#f9a825',
     },
-   
 });
 
 export default Profile;

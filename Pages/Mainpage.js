@@ -5,12 +5,8 @@ import MainPageHeader from "./MainPageHeader ";
 import { UserContext } from "./Context/UsernameContext";
 import { styles } from "../styles/MainPagestyle";
 import ExerciseSets from "./ExerciceSets";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { BlurView } from "expo-blur";
-
+import Footer from "../components/Footer";
 import { useNavigation } from "@react-navigation/native";
 
 const Mainpage = () => {
@@ -39,9 +35,17 @@ const Mainpage = () => {
         <ScrollView horizontal>
         <ExerciseSets selectedType={"Biceps"}></ExerciseSets>
         <ExerciseSets selectedType={"Triceps"}></ExerciseSets>
+        <ExerciseSets selectedType={"Glutes"}></ExerciseSets>
         <ExerciseSets selectedType={"hamstrings"}></ExerciseSets>
         <ExerciseSets selectedType={"chest"}></ExerciseSets>
         <ExerciseSets selectedType={"shoulders"}></ExerciseSets>
+        <ExerciseSets selectedType={"Abdominals"}></ExerciseSets>
+        <ExerciseSets selectedType={"Middle back"}></ExerciseSets>
+        <ExerciseSets selectedType={"Quadriceps"}></ExerciseSets>
+        <ExerciseSets selectedType={"Calves"}></ExerciseSets>
+        
+        
+
 </ScrollView>
         <View style={styles.Textcontainer}>
           <Text style={styles.WorkoutPrograms}>Workouts Programs</Text>
@@ -91,7 +95,13 @@ const Mainpage = () => {
             <ExerciseSets selectedType={"Triceps"} />
             <ExerciseSets selectedType={"hamstrings"} />   
             <ExerciseSets selectedType={"chest"}/>
+            <ExerciseSets selectedType={"Glutes"}/>
             <ExerciseSets selectedType={"shoulders"} />
+            <ExerciseSets selectedType={"Abdominals"}/>
+        <ExerciseSets selectedType={"Middle back"}/>
+        <ExerciseSets selectedType={"Quadriceps"}/>
+        <ExerciseSets selectedType={"Calves"}/>
+        
 
 
           </ScrollView>
@@ -102,6 +112,8 @@ const Mainpage = () => {
             <ExerciseSets selectedType={"Triceps"} />
             <ExerciseSets selectedType={"chest"} />
             <ExerciseSets selectedType={"shoulders"} />
+            <ExerciseSets selectedType={"Abdominals"}/>
+        <ExerciseSets selectedType={"Middle back"}/>
 
 
           </ScrollView>
@@ -110,6 +122,9 @@ const Mainpage = () => {
           <ScrollView  contentContainerStyle={styles.scrolledPrograms}l>
             
             <ExerciseSets selectedType={"hamstrings"} />   
+            <ExerciseSets selectedType={"Quadriceps"}/>
+        <ExerciseSets selectedType={"Calves"}/>
+        <ExerciseSets selectedType={"Glutes"}/>
 
           </ScrollView>
         )}
@@ -123,25 +138,7 @@ const Mainpage = () => {
 
         {/* Add similar conditional rendering for other types */}
       </ScrollView>
-      <View style={styles.footerContainer}>
-        <BlurView intensity={40} style={styles.blurContainer} />
-        <TouchableOpacity style={styles.footerButton}>
-        <Ionicons name="home" size={24} color="#63c138" />
-          <Text style={styles.footerButtonText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <SimpleLineIcons name="energy" size={24} color="white" />
-          <Text style={styles.footerButtonText}>Programs</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleStatsPress}>
-          <Ionicons name="stats-chart" size={24} color="white" />
-          <Text style={styles.footerButtonText}>Stats</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={handleProfilePress}>
-          <MaterialCommunityIcons name="face-man-profile" size={24} color="white" />
-          <Text style={styles.footerButtonText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
+      <Footer currentPage={"Home"}></Footer>
 
     </View>
   );

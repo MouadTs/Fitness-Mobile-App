@@ -36,7 +36,7 @@ export const styles=StyleSheet.create({
         backgroundColor: "rgba(30, 30, 34,0)", // Adjust opacity to control the level of blur
         paddingBottom: 20,
         paddingTop: 10,
-        height:130,
+        height:100,
         
       },
       footerButton: {

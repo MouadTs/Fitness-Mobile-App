@@ -10,7 +10,7 @@ import Profile from "./Pages/Profile";
 // testing 
 import ExerciseList from "./Pages/ExerciceList";
 import Stats from "./Pages/Stats";
-
+import  AchievementsPage from "./Pages/AchievementsPage";
 //
 import { NavigationContainer } from "@react-navigation/native";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -33,6 +33,8 @@ export default function App() {
         <Stack.Screen name="ExerciseList" component={ExerciseList} options={{headerShown:false}}/>
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}></Stack.Screen>
         <Stack.Screen name="Stats" component={Stats} options={{headerShown:false}}></Stack.Screen>
+        <Stack.Screen name="AchievementsPage" component={AchievementsPage} options={{headerShown:false}}></Stack.Screen>
+
 
         
 

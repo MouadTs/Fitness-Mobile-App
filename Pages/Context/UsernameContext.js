@@ -10,6 +10,9 @@ export const UserProvider = ({ children }) => {
     const [weight, setWeight] = useState(null);
     const [caloriesburned, setCaloriesburned] = useState(0);
     const [exerciseDates, setExerciseDates] = useState([]); // Add exerciseDates state
+    
+    const [consecutiveDays, setConsecutiveDays] = useState(0);
+    const [achievements, setAchievements] = useState([]);
 
     return (
         <UserContext.Provider value={{
@@ -19,7 +22,9 @@ export const UserProvider = ({ children }) => {
             profilePicture, setProfilePicture,
             weight, setWeight,
             caloriesburned, setCaloriesburned,
-            exerciseDates, setExerciseDates // Provide exerciseDates and its setter
+            exerciseDates, setExerciseDates, // Provide exerciseDates and its setter
+             consecutiveDays, setConsecutiveDays,
+            achievements, setAchievements
         }}>
             {children}
         </UserContext.Provider>
