@@ -5,6 +5,7 @@ import CustomProgressBar from "./CustomProgressBar";
 import axios from "axios";
 import { UserContext } from "./Context/UsernameContext";
 import config from "../Backend/config";
+import PopEffect from "../components/PopEffect";
 
 const SetDescriptionCard = ({ exerciseSet }) => {
   return (
@@ -19,6 +20,7 @@ const SetDescriptionCard = ({ exerciseSet }) => {
 
 const ExerciseList = ({ route }) => {
   const { exerciseSet } = route.params;
+  const { userId, setCaloriesburned, username } = useContext(UserContext); // Added username
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,7 +28,9 @@ const ExerciseList = ({ route }) => {
   const [progress, setProgress] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [isSetFinished, setIsSetFinished] = useState(false);
-  const { userId, setCaloriesburned } = useContext(UserContext);
+  const [caloriesBurned, setCaloriesBurned] = useState(exerciseSet.calories);
+  const [totalTimeElapsed, setTotalTimeElapsed] = useState(0);
+
 
   useEffect(() => {
     const fetchExerciseData = async () => {
@@ -56,6 +60,7 @@ const ExerciseList = ({ route }) => {
         if (timer > 0) {
           setTimer((prevTimer) => prevTimer - 1);
           setProgress((prevProgress) => prevProgress + 1 / 120); // Adjust based on the total time
+          setTotalTimeElapsed((prevTime) => prevTime + 1); // Increment total time elapsed
         } else {
           handleNextpress();
         }
@@ -63,6 +68,7 @@ const ExerciseList = ({ route }) => {
       return () => clearInterval(timerId);
     }
   }, [timerActive, timer]);
+  
 
   const startTimer = () => {
     setTimerActive(true);
@@ -100,7 +106,7 @@ const ExerciseList = ({ route }) => {
       startTimer();
     } else {
       setIsSetFinished(true);
-      Alert.alert('Set is finished');
+      setModalVisible(false); // Close the exercise modal
       sendCaloriesToDatabase();
     }
   };
@@ -227,11 +233,46 @@ const ExerciseList = ({ route }) => {
             )}
           </View>
         ))}
-        {isSetFinished && (
-          <View style={styles.setFinishedContainer}>
-            <Text style={styles.setFinishedText}>Set Finished!</Text>
+      {isSetFinished && (
+  <Modal
+    animationType="slide"
+    transparent={true}
+    visible={isSetFinished}
+    onRequestClose={() => setIsSetFinished(false)}
+  >
+    <View style={styles.finishedCenteredView}>
+      <View style={styles.finishedModalView}>
+        <PopEffect isVisible={isSetFinished} />
+        <Text style={styles.finishedTitle}>Good Job, {username}!</Text>
+        <Text style={styles.finishedText}>
+          Your activity is over. Keep improving your training skills.
+        </Text>
+        <View style={styles.statsContainer}>
+          <View style={styles.statsItem}>
+            <AntDesign name="clockcircleo" size={24} color="#68cab3" />
+            <Text style={styles.statsText}>{exerciseSet.time}</Text>
           </View>
-        )}
+          <View style={{flexDirection:"row"}}>
+          <View style={styles.statsItem}>
+            <Fontisto name="fire" size={24} color="#fbc955"  />
+            <Text style={styles.statsText}>{exerciseSet.calories} Kcal</Text>
+          </View>
+          <View style={styles.statsItem}>
+          <AntDesign name="heart" size={24} color="red" />
+            <Text style={styles.statsText}>102 bpm</Text>
+          </View></View>
+        </View>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setIsSetFinished(false)}
+        >
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+)}
+
       </View>
     </ScrollView>
   );
@@ -486,6 +527,72 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  finishedCenteredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    
+  },
+  finishedModalView: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  finishedTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4d962c',
+    marginBottom: 20,
+    marginTop: 60,
+  },
+  finishedText: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  finishedStats: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  closeButton: {
+    padding: 10,
+    backgroundColor: '#4d962c',
+    borderRadius: 5,
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginTop: 20,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  statsContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#616163',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  statsItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin:10,
+  },
+  statsText: {
+    marginLeft: 15,
+    
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default ExerciseList;
