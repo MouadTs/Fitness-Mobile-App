@@ -1,6 +1,5 @@
-// AchievementsPage.js
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import Achievements from '../Pages/AchievementSys/Achievements';
 import Footer from '../components/Footer';
 
@@ -9,7 +8,9 @@ const AchievementsPage = () => {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <Text style={styles.header}>Here are your Achievements</Text>
-                <Achievements />
+                <View style={styles.achievementsContainer}>
+                    <Achievements />
+                </View>
             </ScrollView>
             <Footer currentPage={"Achievements"} />
         </View>
@@ -26,11 +27,23 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
     },
     header: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#fff',
         marginBottom: 20,
-        marginTop:50
+        marginTop: 50,
+        textAlign: 'center',
+    },
+    achievementsContainer: {
+        width: '90%',
+        backgroundColor: '#1f1f1f',
+        borderRadius: 10,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 8,
     },
 });
 

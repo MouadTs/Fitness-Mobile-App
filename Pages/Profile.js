@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text, StyleSheet, View, TouchableOpacity, Image, Platform ,ScrollView} from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity, Image, Platform, ScrollView } from "react-native";
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "./Context/UsernameContext";
@@ -11,7 +11,6 @@ import CaloriesCard from "../components/CaloriesCard"; // Importing the new Calo
 import config from "../Backend/config";
 import { FontAwesome6 } from '@expo/vector-icons';
 import Footer from "../components/Footer";
-
 
 const url = config.apiBaseUrl;
 const BASE_URL = url.replace('/api', ''); // Adjust to your server's base URL
@@ -35,6 +34,10 @@ const Profile = () => {
 
     const handleBackbutton = () => {
         navigation.navigate('Mainpage');
+    };
+
+    const handleSignOut = () => {
+        navigation.navigate('Homepage');
     };
 
     const handleDiffChange = async () => {
@@ -114,69 +117,79 @@ const Profile = () => {
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Profile</Text>
             </View>
-            <View style={styles.profileContainer}>
-                <TouchableOpacity onPress={pickImage}>
-                    <View style={styles.profileImage}>
-                        {selectedImage ? (
-                            <Image source={{ uri: selectedImage }} style={styles.image} />
-                        ) : profilePicture ? (
-                            <Image source={{ uri: `${profilePicture}?timestamp=${new Date().getTime()}` }} style={styles.image} />
-                        ) : (
-                            <View style={styles.imagePlaceholder}>
-                                <Text style={styles.imagePlaceholderText}>No Image</Text>
-                            </View>
-                        )}
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.profileContainer}>
+                    <TouchableOpacity onPress={pickImage}>
+                        <View style={styles.profileImage}>
+                            {selectedImage ? (
+                                <Image source={{ uri: selectedImage }} style={styles.image} />
+                            ) : profilePicture ? (
+                                <Image source={{ uri: `${profilePicture}?timestamp=${new Date().getTime()}` }} style={styles.image} />
+                            ) : (
+                                <View style={styles.imagePlaceholder}>
+                                    <Text style={styles.imagePlaceholderText}>No Image</Text>
+                                </View>
+                            )}
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={styles.username}>{username}</Text>
+                </View>
+                <View style={styles.concards}>
+                    <View style={styles.difficultyCard}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", width: "100%" }}>
+                            <Text style={styles.difficultyText}>Difficulty:</Text>
+                            <FontAwesome6 name="bolt-lightning" size={24} color="black" />
+                        </View>
+                        <RNPickerSelect
+                            onValueChange={handleDifficultyChange}
+                            items={[
+                                { label: 'Beginner', value: 'Beginner' },
+                                { label: 'Intermediate', value: 'Intermediate' },
+                                { label: 'Expert', value: 'Expert' },
+                            ]}
+                            style={{
+                                inputIOS: {
+                                    ...pickerSelectStyles.inputIOS,
+                                    backgroundColor: '#bcc982',
+                                    color: '#333',
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                },
+                                inputAndroid: {
+                                    ...pickerSelectStyles.inputAndroid,
+                                    backgroundColor: '#bcc982',
+                                    color: '#333',
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                },
+                                placeholder: {
+                                    color: '#333',
+                                },
+                                iconContainer: {
+                                    top: 10,
+                                    right: 12,
+                                }
+                            }}
+                            value={difficulty}
+                            useNativeAndroidPickerStyle={false}
+                            Icon={() => {
+                                return <AntDesign name="arrowdown" size={24} color="#333" />;
+                            }}
+                        />
                     </View>
+                    <ProfileCards />
+                </View>
+                <View style={{ alignItems: "center" }}>
+                    <CaloriesCard caloriesburned={caloriesburned} />
+                </View>
+                <View style={styles.signOutButtonContainer}>
+                <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+                    <Text style={styles.buttonText1}>Sign Out</Text>
                 </TouchableOpacity>
-                <Text style={styles.username}>{username}</Text>
             </View>
-            <View style={styles.concards}>
-            <View style={styles.difficultyCard}>
-                <View style={{flexDirection:"row", justifyContent:"space-between",width:"100%"}}>
-                <Text style={styles.difficultyText}>Difficulty:</Text>
-                <FontAwesome6 name="bolt-lightning" size={24} color="black" /></View>
-                <RNPickerSelect
-                    onValueChange={handleDifficultyChange}
-                    items={[
-                        { label: 'Beginner', value: 'Beginner' },
-                        { label: 'Intermediate', value: 'Intermediate' },
-                        { label: 'Expert', value: 'Expert' },
-                    ]}
-                    style={{
-                        inputIOS: {
-                            ...pickerSelectStyles.inputIOS,
-                            backgroundColor: '#bcc982',
-                            color: '#333',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                        },
-                        inputAndroid: {
-                            ...pickerSelectStyles.inputAndroid,
-                            backgroundColor: '#bcc982',
-                            color: '#333',
-                            fontSize: 16,
-                            fontWeight: 'bold',
-                        },
-                        placeholder: {
-                            color: '#333',
-                        },
-                        iconContainer: {
-                            top: 10,
-                            right: 12,
-                        }
-                    }}
-                    value={difficulty}
-                    useNativeAndroidPickerStyle={false}
-                    Icon={() => {
-                        return <AntDesign name="arrowdown" size={24} color="#333" />;
-                    }}
-                />
-                
-            </View>
-            <ProfileCards /></View>
-            <View style={{alignItems:"center"}}>
-            <CaloriesCard caloriesburned={caloriesburned} /></View>
-            <Footer currentPage={"Profile"}></Footer>
+            </ScrollView>
+            <Footer currentPage={"Profile"} />
+            
         </View>
     );
 };
@@ -184,8 +197,12 @@ const Profile = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         backgroundColor: "#16161b",
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingBottom: 20,
     },
     header: {
         marginTop: 10,
@@ -248,7 +265,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         backgroundColor: '#bcc982',
         padding: 10,
-        paddingTop:30,
+        paddingTop: 30,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 2, height: 5 },
@@ -267,19 +284,41 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'flex-start',
     },
-    concards:{
-        flexDirection: 'row', // Added to make the cards appear in a row
-            justifyContent: 'space-between', // Added to evenly space the cards in the row
-            alignItems: 'center', // Adjust as needed
-            width: '100%', // Adjust the width as needed
-            paddingHorizontal: 20, // Added for spacing
-            paddingVertical: 10, // Added for spacing
-            marginBottom: 10, // Added for spacing
+    concards: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginBottom: 10,
     },
     achievementsContainer: {
         width: '100%',
         alignItems: 'center',
         marginTop: 20,
+    },
+    signOutButtonContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginTop: 20,
+        paddingBottom: 20,
+    },
+    signOutButton: {
+        width: 200,
+        marginVertical: 10,
+        padding: 16,
+        borderRadius: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#fd4a4a", // Red color for the sign out button
+        marginBottom: 40,
+    },
+    buttonText1: {
+        fontFamily: "AppleSDGothicNeo-Light",
+        fontWeight: "700",
+        fontSize: 20,
+        color: "white",
     },
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { UserContext } from "../Context/UsernameContext";
 import { achievementsList } from "./achievementsList";
 import { FontAwesome } from '@expo/vector-icons'; // Importing icons from Expo
@@ -20,28 +20,18 @@ const quotes = [
 const getRandomQuote = () => quotes[Math.floor(Math.random() * quotes.length)];
 
 const checkAchievements = (stats, setAchievements) => {
-    console.log("Checking achievements with stats:", stats);
     const newAchievements = achievementsList.filter(achievement =>
         achievement.criteria(stats) && !stats.achievements.includes(achievement.id)
     ).map(achievement => achievement.id);
 
-    console.log("New achievements to unlock:", newAchievements);
-
     if (newAchievements.length > 0) {
-        setAchievements(prev => {
-            const updatedAchievements = [...prev, ...newAchievements];
-            console.log("Updated achievements state:", updatedAchievements);
-            return updatedAchievements;
-        });
+        setAchievements(prev => [...prev, ...newAchievements]);
     }
 };
 
 const Achievements = () => {
     const { caloriesburned, consecutiveDays, achievements, setAchievements } = useContext(UserContext);
     const [quote, setQuote] = useState(getRandomQuote);
-
-    console.log("Current calories burned:", caloriesburned);
-    console.log("Current achievements:", achievements);
 
     useEffect(() => {
         const stats = { caloriesburned, consecutiveDays, achievements };
@@ -53,13 +43,11 @@ const Achievements = () => {
     );
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.quote}>
-                {quote}
-            </Text>
-            <Text style={styles.header}>Here are your achievements:</Text>
+        <ScrollView contentContainerStyle={styles.container}>
+            <Text style={styles.quote}>{quote}</Text>
+            
             {achievementsList.map(achievement => (
-                <View key={achievement.id} style={styles.achievement}>
+                <View key={achievement.id} style={[styles.achievement, achievements.includes(achievement.id) && styles.unlockedAchievement]}>
                     <View style={styles.iconContainer}>
                         {renderIcon(achievements.includes(achievement.id))}
                     </View>
@@ -69,53 +57,65 @@ const Achievements = () => {
                     </View>
                 </View>
             ))}
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        width: '90%',
+        flex: 1,
         padding: 20,
-        backgroundColor: '#bcc982',
+        backgroundColor: '#1f1f1f',
         borderRadius: 10,
         marginVertical: 10,
-        alignSelf: 'center',
+        alignItems: 'center',
     },
     quote: {
-        fontSize: 23,
+        fontSize: 20,
         fontStyle: 'italic',
         textAlign: 'center',
         marginBottom: 20,
-        color: '#254416',
-        paddingHorizontal: 10, // Added padding for better readability
+        color: '#fff',
+        paddingHorizontal: 10,
     },
     header: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 20,
         textAlign: 'center',
-        color: '#333',
+        color: '#fff',
     },
     achievement: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginVertical: 5,
+        backgroundColor: '#2a2a2a',
+        borderRadius: 10,
+        padding: 15,
+        marginVertical: 10,
+        width: '100%',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 8,
+    },
+    unlockedAchievement: {
+        backgroundColor: 'gray', // Green color for unlocked achievements
     },
     iconContainer: {
-        marginRight: 10,
+        marginRight: 15,
     },
     textContainer: {
         flex: 1,
     },
     achievementName: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#fff',
     },
     achievementDescription: {
         fontSize: 16,
-        color: '#555',
+        color: '#aaa',
     },
 });
 

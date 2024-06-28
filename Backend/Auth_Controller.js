@@ -43,7 +43,6 @@ exports.register = async (req, res) => {
 
         // Save the new user to the database
         await newUser.save();
-        console.log("bb. ", newUser._id.toString(), typeof newUser._id.toString());
         
         // Create JWT with user ID and name
         const token = jwt.sign({ userId: newUser._id.toString(), name: newUser.username }, 'your_secret_key', { expiresIn: '4h' });
@@ -74,7 +73,6 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Authentication failed, incorrect password' });
         }
 
-        console.log('hahwa lid :', user.id);
         // Create JWT with user ID and name
         const token = jwt.sign({ userId: user._id.toString(), name: user.username }, 'your_secret_key', { expiresIn: '4h' });
 
