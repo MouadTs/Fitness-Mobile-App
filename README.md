@@ -98,10 +98,10 @@ Ensure you have the following installed on your machine:
     <img src="Weight.jpg" alt="Weight" style="width: 200px;">
     <img src="DifficultyLevel.jpg" alt="Difficulty Level" style="width: 200px;">
     <img src="MainMenu.jpg" alt="Main Menu" style="width: 200px;">
-    <img src="ProfileScreen.jpg" alt="Profile Screen" style="width: 200px;">
-    <img src="ExerciseSet.jpg" alt="Exercise Set" style="width: 200px;">
+    <img src="ProfilScreen.jpg" alt="Profile Screen" style="width: 200px;">
+    <img src="ExerciceSet.jpg" alt="Exercise Set" style="width: 200px;">
     <img src="StartsetScreen.jpg" alt="Start Set Screen" style="width: 200px;">
-    <img src="Exercises.jpg" alt="Exercises" style="width: 200px;">
+    <img src="Exercices.jpg" alt="Exercises" style="width: 200px;">
     <img src="Finishing%20the%20set.jpg" alt="Finishing the set" style="width: 200px;">
     <img src="Achievements.jpg" alt="Achievements" style="width: 200px;">
     <img src="Stats%20page.jpg" alt="Stats Page" style="width: 200px;">
