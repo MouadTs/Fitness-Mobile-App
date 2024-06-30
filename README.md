@@ -1,8 +1,10 @@
-# Fitness Mobile App
+# Fitness Mobile App (RISE UP)
 
 ## Overview
 
 Welcome to the Fitness Mobile App repository! This application is built using React Native and Expo Go for the frontend, with a backend powered by Node.js and Express.js. MongoDB is used as the database to store user and exercise data. The exercise dataset is sourced from the public repository: [free-exercise-db](https://github.com/yuhonas/free-exercise-db).
+
+![Homepage](HomeScreen.jpg)
 
 ## Features
 
@@ -21,24 +23,6 @@ Welcome to the Fitness Mobile App repository! This application is built using Re
 - **Database**: MongoDB
 - **Testing**: Postman for API testing
 - **Version Control**: Git and GitHub
-
-## Project Structure
-
-.
-├── backend
-│ ├── controllers
-│ ├── models
-│ ├── routes
-│ ├── server.js
-├── frontend
-│ ├── assets
-│ ├── components
-│ ├── screens
-│ ├── App.js
-├── .gitignore
-├── README.md
-├── package.json
-└── yarn.lock
 
 
 ## Installation
@@ -59,74 +43,77 @@ Ensure you have the following installed on your machine:
    ```bash
    git clone https://github.com/your-username/fitness-app.git
    cd fitness-app/backend
-Install the dependencies:
+2. Install the dependencies:
+    ```bash
+   npm install
 
-bash
-Copier le code
-npm install
-Create a .env file in the backend directory and add your MongoDB URI:
-
-env
-Copier le code
-MONGO_URI=your-mongodb-uri
-Start the server:
-
-bash
-Copier le code
-node server.js
-Frontend Setup
-Navigate to the frontend directory:
-
-bash
-Copier le code
-cd ../frontend
-Install the dependencies:
-
-bash
-Copier le code
-npm install
-Start the Expo server:
-
-bash
-Copier le code
-npm start
-Usage
-Open the Expo Go app on your mobile device.
-Scan the QR code displayed in the terminal after running expo start.
-Register or log in to start using the app.
-API Endpoints
-User Authentication
-
-POST /api/users/register - Register a new user
-POST /api/users/login - User login
-Exercises
-
-GET /api/exercises - Get all exercises
-GET /api/exercises/:id - Get a specific exercise
-Workouts
-
-POST /api/workouts - Create a new workout
-GET /api/workouts - Get all workouts
-GET /api/workouts/:id - Get a specific workout
-Awards
-
-GET /api/awards - Get all awards
-POST /api/awards - Create a new award
-Calories Tracking
-
-POST /api/calories - Add calorie intake or expenditure
-GET /api/calories - Get all calorie records
-Screenshots
-Place your screenshots here:
+3. Create a .env file in the backend directory and add your MongoDB URI::
+    ```bash
+   MONGO_URI=your-mongodb-uri
+4. Start the server:
+    ```bash
+   node server.js
 
 
+#Frontend Setup
+1. Navigate to the frontend directory:
+     ```bash
+   cd ../frontend
+2. Install the dependencies:
+     ```bash
+   npm install
+3. Start the expo server:
+     ```bash
+   npm start
+## Usage
+
+1. Open the Expo Go app on your mobile device.
+2. Scan the QR code displayed in the terminal after running `expo start`.
+3. Register or log in to start using the app.
+
+## API Endpoints
+
+### User Authentication
+
+- `POST /register` - Register a new user
+- `POST /login` - User login
+
+### User Profile
+
+- `POST /difficulty` - Update user difficulty level
+- `POST /uploadProfilePicture` - Upload user profile picture
+
+### Health Tracking
+
+- `POST /Weight` - Log user weight
+- `POST /Calories` - Log calorie intake or expenditure
+- `POST /addExerciseDate` - Add exercise date for user
+
+## Screenshots
+![Creating an account](Creating%20an%20account.jpg)
+![Gender](Gender.jpg)
+![Age](Age.jpg)
+![Weight](Weight.jpg)
+![Difficulty Level](DifficultyLevel.jpg)
+![Main Menu](MainMenu.jpg)
+![Profile Screen](ProfileScreen.jpg)
+![Exercise Set](ExerciseSet.jpg)
+![Start Set Screen](StartsetScreen.jpg)
+![Exercises](Exercises.jpg)
+![Finishing the set](Finishing%20the%20set.jpg)
+![Achievements](Achievements.jpg)
+![Stats Page](Stats%20page.jpg)
 
 
-Contributing
+
+## Contributing
+
 Contributions are welcome! Please open an issue or submit a pull request.
 
-License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Acknowledgements
 
-Acknowledgements
-Thanks to yuhonas for the free-exercise-db repository.
+Thanks to [yuhonas](https://github.com/yuhonas) for the [free-exercise-db](https://github.com/yuhonas/free-exercise-db) repository.
+
+
+
+
