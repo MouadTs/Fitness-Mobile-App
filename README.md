@@ -90,19 +90,23 @@ Ensure you have the following installed on your machine:
 - `POST /addExerciseDate` - Add exercise date for user
 
 ## Screenshots
-![Creating an account](Creating%20an%20account.jpg)
-![Gender](Gender.jpg)
-![Age](Age.jpg)
-![Weight](Weight.jpg)
-![Difficulty Level](DifficultyLevel.jpg)
-![Main Menu](MainMenu.jpg)
-![Profile Screen](ProfileScreen.jpg)
-![Exercise Set](ExerciseSet.jpg)
-![Start Set Screen](StartsetScreen.jpg)
-![Exercises](Exercises.jpg)
-![Finishing the set](Finishing%20the%20set.jpg)
-![Achievements](Achievements.jpg)
-![Stats Page](Stats%20page.jpg)
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <img src="Creating%20an%20account.jpg" alt="Creating an account" style="width: 200px;">
+    <img src="Gender.jpg" alt="Gender" style="width: 200px;">
+    <img src="Age.jpg" alt="Age" style="width: 200px;">
+    <img src="Weight.jpg" alt="Weight" style="width: 200px;">
+    <img src="DifficultyLevel.jpg" alt="Difficulty Level" style="width: 200px;">
+    <img src="MainMenu.jpg" alt="Main Menu" style="width: 200px;">
+    <img src="ProfileScreen.jpg" alt="Profile Screen" style="width: 200px;">
+    <img src="ExerciseSet.jpg" alt="Exercise Set" style="width: 200px;">
+    <img src="StartsetScreen.jpg" alt="Start Set Screen" style="width: 200px;">
+    <img src="Exercises.jpg" alt="Exercises" style="width: 200px;">
+    <img src="Finishing%20the%20set.jpg" alt="Finishing the set" style="width: 200px;">
+    <img src="Achievements.jpg" alt="Achievements" style="width: 200px;">
+    <img src="Stats%20page.jpg" alt="Stats Page" style="width: 200px;">
+</div>
+
 
 
 
