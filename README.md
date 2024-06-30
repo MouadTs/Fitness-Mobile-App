@@ -4,7 +4,9 @@
 
 Welcome to the Fitness Mobile App repository! This application is built using React Native and Expo Go for the frontend, with a backend powered by Node.js and Express.js. MongoDB is used as the database to store user and exercise data. The exercise dataset is sourced from the public repository: [free-exercise-db](https://github.com/yuhonas/free-exercise-db).
 
-![Homepage](HomeScreen.jpg)
+<div style="text-align: center;">
+  <img src="logo.png" alt="Logo" style="width: 200px;">
+</div>
 
 ## Features
 
@@ -92,6 +94,7 @@ Ensure you have the following installed on your machine:
 ## Screenshots
 
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+   <img src="HomeScreen.jpg" alt="Home" style="width: 200px;">
     <img src="Creating%20an%20account.jpg" alt="Creating an account" style="width: 200px;">
     <img src="Gender.jpg" alt="Gender" style="width: 200px;">
     <img src="Age.jpg" alt="Age" style="width: 200px;">
